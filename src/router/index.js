@@ -5,11 +5,11 @@ import HelloWorld from '@/components/HelloWorld'
 Vue.use(Router)
 
 export const constantRouterMap = [
-  // { path: '/login',
-  //   meta: { title: '登录', noCache: true },
-  //   component: () => import('@/views/login'),
-  //   hidden: true
-  // },
+  { path: '/login',
+    // meta: { title: '登录', noCache: true },
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
   {
 	  path: '/404',
 	  component: () => import('@/views/ErrorPages/404'),

@@ -4,9 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 import '../static/global/global.css'
+import '../static/plugins/bootstrap/css/bootstrap.css'
+import '../static/plugins/font-awesome/css/font-awesome.css'
+import '../static/css/nav.css'
+import '../static/rbac/css/rbac.css'
+import Vue2Editor from "vue2-editor";
+
+Vue.use(Vue2Editor);
 
 Vue.use(ElementUI)
 

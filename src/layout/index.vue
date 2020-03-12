@@ -9,7 +9,7 @@
 import Nav from './components/nav'
 export default {
   data () {
-    return{}
+    return {}
   },
   components: {
     Nav

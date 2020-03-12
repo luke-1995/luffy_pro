@@ -4,7 +4,6 @@ import getters from './getters'
 
 Vue.use(VueX)
 
-
 const modulesFiles = require.context('./modules', true, /\.js$/)
 
 // you do not need `import app from './modules/app'`

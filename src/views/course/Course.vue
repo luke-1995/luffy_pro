@@ -5,7 +5,7 @@
 			  <li v-for='(item,index) in categoryList' :key='item.id' :class='{active:categoryIndex===index}' @click='categoryHandler(index,item)'>
 			  	{{item.name}}
 			  </li>
-			
+
 			</ul>
 
 			<div class="courseList" v-for='(courseDetail) in categoryList' :key='courseDetail.id' v-show='isAll'>
@@ -27,9 +27,9 @@
 							            <span  class="t">免费</span>
 							      </span> -->
 							      <span class="span4">¥29</span>
-								
+
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
@@ -54,93 +54,81 @@
 							            <span  class="t">免费</span>
 							      </span> -->
 							      <span class="span4">¥29</span>
-								
+
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		
+
 	</div>
 </template>
 
 <script>
 
-
 export default {
 
   name: 'Course',
-  data(){
-  	return{
-  		categoryList:'',
-  		courseDetail:'',
-  		categoryIndex:0,
-  		courseId:0,
-  		h:'https://',
-  		isAll:true,
+  data () {
+  	return {
+  		categoryList: '',
+  		courseDetail: '',
+  		categoryIndex: 0,
+  		courseId: 0,
+  		h: 'https://',
+  		isAll: true
 
   	}
   },
-  created(){
-
-  	this.$http.category().
-  	then(res=>{
+  created () {
+  	this.$http.category()
+  	.then(res => {
   		if (!res.data.error_no) {
-  			this.categoryList=res.data.data;
-  			
-  			let allPro={
-  				id:0,
-  				name:'所有',
-  				category:0,
-  			};
-  			this.categoryList.unshift(allPro);
+  			this.categoryList = res.data.data
 
-  		}}).catch(err=>{});
-
-  	
-  	
-
-  
-  },
-  updated(){
-  	
-  },
-  methods:{
-  	categoryHandler(index,item){
-  		this.categoryIndex=index;
-  		
-  		if (item.id===0) {
-  			this.isAll=true;
-  			
-  		}else{
-  			this.isAll=false;
-  			this.courseDetail=item.courses;
+  			let allPro = {
+  				id: 0,
+  				name: '所有',
+  				category: 0
+  			}
+  			this.categoryList.unshift(allPro)
   		}
-  		
+      }).catch(err => {})
+  },
+  updated () {
+
+  },
+  methods: {
+  	categoryHandler (index, item) {
+  		this.categoryIndex = index
+
+  		if (item.id === 0) {
+  			this.isAll = true
+  		} else {
+  			this.isAll = false
+  			this.courseDetail = item.courses
+  		}
   	},
-  	getCourseImg(src){
-  		return 'https://'+src
+  	getCourseImg (src) {
+  		return 'https://' + src
   	},
-  	getLevel(level){
-  		if (level===0) {
+  	getLevel (level) {
+  		if (level === 0) {
   			return '初级'
-  		}
-  		else if(level===1){
+  		} else if (level === 1) {
   			return '进阶'
-  		}else{
+  		} else {
   			return '高阶'
   		}
-  		
   	},
-  	getCourse(courseId){
-  		this.$router.push({name:'courseDetail',params:{courseId:courseId}});
-  	},
+  	getCourse (courseId) {
+  		this.$router.push({name: 'courseDetail', params: {courseId: courseId}})
+  	}
 
-  },
-};
+  }
+}
 </script>
 
 <style lang="css" scoped>
@@ -198,7 +186,7 @@ ul li.active{
 }
 .detail .head img{
 	   width: 100%;
-	    height: 144px; 
+	    height: 144px;
 	    position: absolute;
 	    left: 0;
 	    top: 0;
@@ -233,7 +221,7 @@ ul li.active{
 
     height: 118px;
     padding-top: 30px;
-    
+
 }
 .content p{
      width: 100%;
@@ -256,7 +244,7 @@ ul li.active{
 .content-detail .span3{
 	position: absolute;
 	right: 0;
-	
+
 }
 .content-detail .span3 .s{
 	text-decoration: line-through;

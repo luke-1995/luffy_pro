@@ -77,125 +77,125 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { roleGet, rolePost, rolePatch, roleDel } from "@/api/role";
+import Layout from '@/layout/rbac'
+import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
 
 export default {
-  data() {
+  data () {
     return {
       tableData: [
         {
           id: 0,
-          student: "学生",
-          title: "111",
-          homework_status: "未提交",
-          file: "www.baidu.com"
+          student: '学生',
+          title: '111',
+          homework_status: '未提交',
+          file: 'www.baidu.com'
         }
       ],
-      onConfirm: "delete",
+      onConfirm: 'delete',
       isadd: false,
       isedit: false,
-      addError: "",
+      addError: '',
       addform: {
-        title: ""
+        title: ''
       },
       editform: {
-        title: ""
+        title: ''
       },
-      formLabelWidth: "100px",
+      formLabelWidth: '100px',
       fileList: [
         {
-          name: "food.jpeg",
+          name: 'food.jpeg',
           url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }
       ]
-    };
+    }
   },
   methods: {
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
+    addData () {
       rolePost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
+    editDate () {
       rolePatch(this.editform)
         .then(res => {
-          alert("submit!");
-          this.isedit = false;
+          alert('submit!')
+          this.isedit = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       roleDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     },
-    submitUpload() {
-      this.$refs.upload.submit();
+    submitUpload () {
+      this.$refs.upload.submit()
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
     },
-    handlePreview(file) {
-      console.log(file);
+    handlePreview (file) {
+      console.log(file)
     }
   },
-  created() {
+  created () {
     roleGet()
       .then(res => {
-        this.tableData = res;
-        console.log(res);
+        this.tableData = res
+        console.log(res)
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

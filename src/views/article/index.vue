@@ -79,7 +79,7 @@ import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
 export default {
   data () {
     return {
-      tableData: [{id:0,title:'title'}],
+      tableData: [{id: 0, title: 'title'}],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,
@@ -134,7 +134,7 @@ export default {
     },
 
     edit (row) {
-      this.$router.push({name:'article_change',params:row})
+      this.$router.push({name: 'article_change', params: row})
     },
     del (row) {
       roleDel(row.id)
@@ -150,7 +150,7 @@ export default {
     delFun (i) {
       var index = this.tableData.indexOf(i)
       console.log(index)
-      this.tableData.splice(index, 1);
+      this.tableData.splice(index, 1)
     }
   },
   created () {

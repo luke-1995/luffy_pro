@@ -16,9 +16,9 @@
                 </div>
 
                 <!-- <el-dropdown> -->
-               <div class="nav-right "  @mouseenter = 'enterHandler' @mouseleave ='leaveHandler'>
+               <div class="nav-right "  @mouseenter = 'enterHandler' @mouseleave ='leaveHandler' v-if="userInfo">
                   <span class = 'el-dropdown-link'>学习中心</span>
-                  <!-- <span class="user">{{userInfo.username}}</span> -->
+                  <span class="user">{{userInfo.username}}1111</span>
                   <!-- <img :src="userInfo.avatar" alt=""> -->
                   <ul class="my_account" v-show = 'isShow'>
                       <li>
@@ -37,10 +37,10 @@
                         <!-- 我的消息<span class="msg">{{userInfo.notice_num}}</span> -->
                         <i>></i>
                       </li>
-                      <!-- <li  @click='shopCartHandler' >
+                      <li   >
                        购物车<span class="count">({{userInfo.shop_cart_num}})</span>
                         <i>></i>
-                      </li> -->
+                      </li>
                       <li>
                        退出
                         <i>></i>
@@ -48,13 +48,13 @@
                   </ul>
                 </div>
               <!-- </el-dropdown> -->
-                <!-- <div class="nav-right" v-else>
+                <div class="nav-right" v-else>
 
                   <span>登录</span>
                   &nbsp;| &nbsp;
                   <span>注册</span>
 
-                </div> -->
+                </div>
             </div>
       </el-header>
     </el-container>
@@ -78,9 +78,9 @@ export default {
     }
   },
   computed: {
-    // userInfo(){
-    //   return this.$store.state.userInfo
-    // },
+    userInfo(){
+      return this.$store.getters.userInfo
+    },
   },
   methods: {
     // shopCartHandler(){
@@ -93,6 +93,9 @@ export default {
       this.isShow = false
     }
 
+  },
+  mounted(){
+    
   }
 
 }

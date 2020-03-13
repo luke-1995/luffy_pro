@@ -53,7 +53,7 @@
 						<p class="price" :class='{active:index===priceIndex}'>¥{{item.price}}</p>
 						<p class="time" :class='{active:index===priceIndex}'>{{item.time}}</p>
 					</li>
-					
+
 				</ul>
 				<div class="course-action">
 					<button class="left">购买</button>
@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 	</div>
 </template>
 
@@ -69,50 +69,46 @@
 export default {
 
   name: 'CourseDetail',
-  data(){
-  	return{
-  		courseDetail:{},
-  		priceIndex:null,
-  		userinfo:window.localStorage.getItem('access_token'),
-  		coursePrice:[
-  		{id:1,price:99,time:'有效期一个月'},
-  		{id:2,price:99,time:'有效期两个月'},
-  		{id:3,price:99,time:'有效期三个月'},
-  		],
+  data () {
+  	return {
+  		courseDetail: {},
+  		priceIndex: null,
+  		userinfo: window.localStorage.getItem('access_token'),
+  		coursePrice: [
+  		{id: 1, price: 99, time: '有效期一个月'},
+  		{id: 2, price: 99, time: '有效期两个月'},
+  		{id: 3, price: 99, time: '有效期三个月'}
+  		]
   	}
   },
-  methods:{
-  	priceHandler(index){
-  		this.priceIndex=index;
+  methods: {
+  	priceHandler (index) {
+  		this.priceIndex = index
   	},
-  	addAShopping(){
+  	addAShopping () {
   		if (this.priceIndex) {
-  			if (this.userinfo) {console.log('ok')} 
-  			else 
-  			{	
-  				console.log(121212);
-  				this.$router.push({name:'Login',query:{return_url:window.location.href},});
+  			if (this.userinfo) { console.log('ok') } else {
+  				console.log(121212)
+  				this.$router.push({name: 'Login', query: {return_url: window.location.href}})
   			}
-  		} 
-  		else {
+  		} else {
   			this.$message({
-  			 	message:'未选择套餐',
-  			 	center:true
-  			 });
+  			 	message: '未选择套餐',
+  			 	center: true
+  			 })
   		}
-  	},
+  	}
   },
-  created(){
-  	this.$http.courseDetail(this.$route.params.courseId).
-  	then(res=>{
-  		
+  created () {
+  	this.$http.courseDetail(this.$route.params.courseId)
+  	.then(res => {
   		if (!res.data.error_no) {
-  			this.courseDetail=res.data.data;
-  			console.log(this.courseDetail);
+  			this.courseDetail = res.data.data
+  			console.log(this.courseDetail)
   		}
-  	}).catch(err=>{});
-  },
-};
+  	}).catch(err => {})
+  }
+}
 </script>
 
 <style lang="css" scoped>
@@ -241,7 +237,7 @@ height: 80px;
 	    letter-spacing: 1.57px;
 	    display: inline-block;
 	    margin-top: 102px
-} 
+}
 .course-price ul{
 	/*width: 800px;*/
 	margin: 50px auto;
@@ -255,7 +251,6 @@ height: 80px;
 	height: 112px;
 	border: 1px solid #979797;
 }
-
 
 .course-price ul li p:first-child{
 	font-size: 24px;
@@ -272,7 +267,7 @@ height: 80px;
 }
 .course-price ul li.active{
 	background: #00CD23;
-	
+
 }
 
 .course-price ul li p.active{
@@ -310,5 +305,4 @@ height: 80px;
 	background: #f5a623 url() no-repeat 125px 15px!important;
 }
 
-    
 </style>

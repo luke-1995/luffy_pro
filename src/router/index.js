@@ -1,99 +1,38 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Config from '@/settings'
+import router from './router'
+import store from '../store'
 
-Vue.use(Router)
-
-export const constantRouterMap = [
-  {
-    path: '/login',
-    // meta: { title: '登录', noCache: true },
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/ErrorPages/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/ErrorPages/401'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: () => import('@/layout'),
-    redirect: '/home',
-    children: [
-      {
-        path: 'home',
-        component: () => import('@/views/home/index'),
-        name: 'Home',
-        meta: { title: '首页', icon: 'index', affix: true, noCache: true }
+router.beforeEach((to, from, next) => {
+  if (Config.WhiteList.indexOf(to.path) !== -1 && !localStorage.getItem('access_token')) {
+    next()
+    
+  } else {
+    if (!localStorage.getItem('access_token')) {
+      next(`/login?redirect=${to.path}`)
+    } else {
+      if (store.userInfo) {
+        next()
+      } else {
+        let username = localStorage.getItem('username')
+        let shop_cart_num = localStorage.getItem('shop_cart_num')
+        let user = {username: username, shop_cart_num: shop_cart_num}
+        store.dispatch('updateUserinfo', user)
+        next()
       }
-    ]
-  },
-  {
-    path: '/role',
-    component: () => import('@/views/role/index'),
-
-  },
-  {
-    path: '/student_record',
-    component: () => import('@/views/student_record/index'),
-
-  },
-  {
-    path: '/student_question/answer',
-    component: () => import('@/views/student_question/answer'),
-
-  },
-  {
-    path: '/homework/comment',
-    component: () => import('@/views/homework/comment'),
-
-  },
-  {
-    path: '/article',
-    component: () => import('@/views/article/index'),
-
-  },
-  {
-    path: '/article/change',
-    component: () => import('@/views/article/change'),
-    name:'article_change'
-
-  },
-  {
-    path: 'rbac/course',
-    component: () => import('@/views/course/index'),
-
-  },
-  {
-    path: 'course',
-    component: () => import('@/views/course/Course'),
-
-  },
-  {
-    path: 'course/detail',
-    component: () => import('@/views/course/CourseDetail'),
-
-  },
-  {
-    path: '/order',
-    component: () => import('@/views/order/index'),
-
-  },
-
-  // {
-  //   path: '/',
-  //   component: () =>import('@/layout')
-  // }
-
-]
-
-export default new Router({
-  routes: constantRouterMap,
-  mode: 'history'
+    }
+  }
 })
+
+export const getUserinfo = () => {
+  if (localStorage.getItem('access_token')) {
+    let userInfo = {
+      access_token: localStorage.getItem('access_token'),
+      username: localStorage.getItem('username'),
+      shop_cart_num: localStorage.getItem('shop_cart_num')
+    }
+    return userInfo
+  }
+  return false
+}
+
+export default router

@@ -151,7 +151,7 @@ export default {
     delFun (i) {
       var index = this.tableData.indexOf(i)
       console.log(index)
-      this.tableData.splice(index, 1);
+      this.tableData.splice(index, 1)
     }
   },
   created () {

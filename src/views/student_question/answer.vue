@@ -90,7 +90,7 @@ import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
 export default {
   data () {
     return {
-      tableData: [{id:0,title:"问题标题",question_status:'未回答',content:'xxx',answer:''}],
+      tableData: [{id: 0, title: '问题标题', question_status: '未回答', content: 'xxx', answer: ''}],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,
@@ -162,7 +162,7 @@ export default {
     delFun (i) {
       var index = this.tableData.indexOf(i)
       console.log(index)
-      this.tableData.splice(index, 1);
+      this.tableData.splice(index, 1)
     }
   },
   created () {

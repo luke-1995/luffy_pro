@@ -79,84 +79,98 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
+import Layout from '@/layout/rbac'
+import { srGet, srPost, srPatch, srDel } from '@/api/student_record'
 export default {
   components: {
     Layout
   },
-  data() {
+  data () {
     return {
-      tableData: [{id:1,note:'111',date:'date',teacher:'teacher',student:'student'}],
+      tableData: [{id: 1, note: '111', date: 'date', teacher: 'teacher', student: 'student'}],
       addform: {},
       editform: {},
-      formLabelWidth: "100px",
+      formLabelWidth: '100px',
       isadd: false,
       isedit: false,
-      addError: '',
-    };
+      addError: ''
+    }
   },
   methods: {
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
-      rolePost(this.addform)
+    addData () {
+      srPost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
-      rolePatch(this.editform)
+    editDate () {
+      srPatch(this.editform)
         .then(res => {
-          alert("submit!");
-          this.isedit = false;
+          alert('submit!')
+          this.isedit = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
-      roleDel(row.id)
+    del (row) {
+      srDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     }
+  },
+  created () {
+    srGet()
+      .then(res => {
+        this.tableData = res
+        console.log(res)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
+  components: {
+    Layout
   }
-};
+}
 </script>
 
 <style>

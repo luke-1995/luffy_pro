@@ -31,12 +31,12 @@
         </el-form-item>
         <el-form-item
           label="密码"
-          prop="pwd"
+          prop="password"
           :rules="[
       { required: true, message: '请输入密码', trigger: 'blur' },
     ]"
         >
-          <el-input type="password" v-model="loginForm.pwd" autocomplete="off"></el-input>
+          <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-col :span="8">
@@ -58,15 +58,15 @@
           <el-form-item label="用户名" prop="username">
             <el-input v-model.number="ruleForm.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="checkPass">
             <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="isadd = false">取 消</el-button>
+          <el-button @click="isregister = false">取 消</el-button>
           <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         </div>
       </el-dialog>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { login, registerApi } from "@/api/login";
 export default {
   name: "Login",
   data() {
@@ -82,6 +83,7 @@ export default {
       if (!value) {
         return callback(new Error("用户名不能为空"));
       }
+      callback();
     };
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -96,7 +98,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.ruleForm.password) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -109,18 +111,17 @@ export default {
       getValidate: {},
       loginForm: {
         username: "a",
-        pwd: "123"
+        password: "123"
       },
-      ruleform: {},
       addError: {},
       formLabelWidth: "100px",
       ruleForm: {
-        pass: "",
+        password: "",
         checkPass: "",
         age: ""
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        password: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
         username: [{ validator: checkUsername, trigger: "blur" }]
       }
@@ -130,21 +131,48 @@ export default {
     register() {
       this.isregister = true;
     },
+    Register(userinfo) {
+      console.log(222);
+    },
     submitForm(formName) {
+      console.log(formName);
       this.$refs[formName].validate(valid => {
+        console.log(formName, 1111, valid);
         if (valid) {
-          let params = {
-            username: this.username,
-            password: this.password
-          };
-          this.$store
-            .dispatch("Login", params)
-            .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-            })
-            .catch(() => {
-              console.log("error submit!!");
-            });
+          console.log(formName);
+          if (formName === "loginForm") {
+            this.$store
+              .dispatch("Login", this.loginForm)
+              .then(error => {
+                if (!error) {
+                  this.$router.push({
+                    path: this.$route.params.redirect || "/"
+                  });
+                } else {
+                  alert(error);
+                }
+              })
+              .catch(() => {
+                console.log("error submit!!");
+              });
+          } else {
+            console.log(111111);
+            registerApi(this.ruleForm)
+              .then(res => {
+                console.log(res)
+                if (res.errors) {
+                  alert(res.errors);
+                } else {
+                  this.isregister=false;
+                  alert('submit');
+                }
+                
+                
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
         } else {
           console.log("error submit!!");
           return false;

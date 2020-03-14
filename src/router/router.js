@@ -42,8 +42,15 @@ export const constantRouterMap = [
 
   },
   {
-    path: '/student_record',
-    component: () => import('@/views/student_record/index')
+    path: '/student_record/:sid',
+    component: () => import('@/views/student_record/index'),
+    name:'student_record'
+
+  },
+  {
+    path: '/student_list',
+    component: () => import('@/views/student_list/index'),
+    name:'student_list'
 
   },
   {
@@ -85,6 +92,11 @@ export const constantRouterMap = [
   {
     path: '/order',
     component: () => import('@/views/order/index')
+
+  },
+  {
+    path: '/distribution',
+    component: () => import('@/views/distribution/index')
 
   }
 

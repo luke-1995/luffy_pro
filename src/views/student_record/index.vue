@@ -12,7 +12,7 @@
               <div style="margin-top: 5px;" class="clearfix">
                 <div style="display: inline-block;margin-right: 15px;" class="pull-left">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
-                  {{ row.student }}
+                  {{ row.student_name }}
                 </div>
                 <div style="display: inline-block;" class="pull-left">
                   <i class="fa fa-clock-o" aria-hidden="true"></i>
@@ -101,6 +101,7 @@ export default {
       this.isadd = true
     },
     addData () {
+      console.log(this.addform)
       srPost(this.addform)
         .then(res => {
           alert('submit!')
@@ -112,8 +113,12 @@ export default {
         })
     },
     editDate () {
+      delete this.editform.student_name
+      // delete this.editform.date
+      console.log(this.editform)
       srPatch(this.editform)
         .then(res => {
+          
           alert('submit!')
           this.isedit = false
         })
@@ -158,9 +163,14 @@ export default {
     }
   },
   created () {
-    srGet()
+    let sid = this.$route.params.sid
+    srGet(sid)
       .then(res => {
+        console.log(res)
         this.tableData = res
+        let uid=this.$store.getters.userInfo.id
+        this.addform.student=sid;
+        this.addform.teacher=uid;
         console.log(res)
       })
       .catch(error => {

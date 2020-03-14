@@ -3,39 +3,39 @@
     <template #content>
       <div class="luffy-container">
         <div class="container">
-          <!-- <div class="btn-group" style="margin: 5px 0">
+          <div class="btn-group" style="margin: 5px 0">
             <el-button size="mini" @click="add">添加角色</el-button>
-          </div> -->
+          </div>
           <el-table :data="tableData" style="width: 80%" justify="center">
             <el-table-column label="id" width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.id }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="问题标题" width="180">
+            <el-table-column label="学生名称" width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.title }}</span>
+                <span style="margin-left: 10px">{{ scope.row.username }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="问题状态" width="180">
+            <el-table-column label="添加学生记录" width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.question_status }}</span>
+                <span style="margin-left: 10px"><router-link :to='{name:"student_record",params:{sid:scope.row.id}}'>学生记录</router-link></span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary " @click="edit(scope.row)">回答问题</el-button>
-                <!-- <template>
+                <el-button size="mini" type="primary " @click="edit(scope.row)">编辑</el-button>
+                <template>
                   <el-popconfirm title="确定删除吗？" @onConfirm="del(scope.row)">
                     <el-button slot="reference" type="danger" size="mini">删除</el-button>
                   </el-popconfirm>
-                </template> -->
+                </template>
               </template>
             </el-table-column>
           </el-table>
         </div>
       </div>
-      <el-dialog title="问题增加表" :visible.sync="isadd">
+      <el-dialog title="角色增加表" :visible.sync="isadd">
         <el-form :model="addform" ref="addform" class="demo-dynamic">
           <el-form-item
             label="角色"
@@ -55,23 +55,17 @@
         </div>
       </el-dialog>
 
-      <el-dialog title="更新表" :visible.sync="isedit">
+      <el-dialog title="角色更新表" :visible.sync="isedit">
         <el-form :model="editform" ref="editform" class="demo-dynamic">
           <el-form-item
-            label="问题内容"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="editform.content" autocomplete="off" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="回答"
-            prop="answer"
+            label="角色"
+            prop="title"
             :label-width="formLabelWidth"
             :rules="[
-                  { required: true, message: '请输入内容', trigger: 'blur' }
+                  { required: true, message: '请输入角色名', trigger: 'blur' }
                 ]"
           >
-            <el-input v-model="editform.answer" autocomplete="off" type="textarea"></el-input>
+            <el-input v-model="editform.title" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -85,12 +79,12 @@
 
 <script>
 import Layout from '@/layout/rbac'
-import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
+import { slGet } from '@/api/student_list'
 
 export default {
   data () {
     return {
-      tableData: [{id: 0, title: '问题标题', question_status: '未回答', content: 'xxx', answer: ''}],
+      tableData: [{id:0,username:'title'}],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,
@@ -99,7 +93,7 @@ export default {
         title: ''
       },
       editform: {
-        content: '问题内容'
+        title: ''
       },
       formLabelWidth: '100px'
     }
@@ -166,7 +160,7 @@ export default {
     }
   },
   created () {
-    roleGet()
+    slGet()
       .then(res => {
         this.tableData = res
         console.log(res)

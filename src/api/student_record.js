@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function srGet () {
+export function srGet (id) {
   return request({
-    url: 'student_record/',
+    url: `student_record_list/${id}/`,
     method: 'get'
   })
 }

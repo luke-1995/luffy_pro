@@ -18,7 +18,7 @@
                 <!-- <el-dropdown> -->
                <div class="nav-right "  @mouseenter = 'enterHandler' @mouseleave ='leaveHandler' v-if="userInfo">
                   <span class = 'el-dropdown-link'>学习中心</span>
-                  <span class="user">{{userInfo.username}}1111</span>
+                  <span class="user">{{userInfo.username}}</span>
                   <!-- <img :src="userInfo.avatar" alt=""> -->
                   <ul class="my_account" v-show = 'isShow'>
                       <li>

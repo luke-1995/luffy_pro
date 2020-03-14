@@ -19,8 +19,9 @@ const user = {
         login(userinfo).then(res => {
 
           if(res.code===1000){
-            localStorage.setItem('access_token', res.data.access_token)
+          localStorage.setItem('access_token', res.data.access_token)
           localStorage.setItem('username', res.data.user.username)
+          localStorage.setItem('id', res.data.user.id)
           localStorage.setItem('shop_cart_num', res.data.user.shop_cart_num)
           commit('updateUserinfo', res.data.user)
           }

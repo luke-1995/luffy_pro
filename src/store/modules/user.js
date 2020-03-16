@@ -2,18 +2,12 @@ import { login } from '@/api/login'
 
 const user = {
   state: {
-    userinfo: {},
-    shoppingCart:{}
+    userinfo: {}
   },
   mutations: {
     updateUserinfo (state, val) {
       state.userinfo = val
-    },
-    updateShoppingCart(state,val){
-      state.userinfo.shop_cart_num=val;
-      localStorage.setItem('shop_cart_num',val)
-    },
-
+    }
   },
   actions: {
     updateUserinfo ({ commit }, val) {

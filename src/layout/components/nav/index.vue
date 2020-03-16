@@ -63,10 +63,10 @@
 
 <script>
 var HeaderList = [
-  {id: 1, name: 'Home', title: '首页'},
-  {id: 2, name: 'Course', title: '课程'},
-  {id: 3, name: 'LightCourse', title: '轻课'},
-  {id: 4, name: 'Micro', title: '学位课'}
+  {id: 1, name: 'home', title: '首页'},
+  {id: 2, name: 'course', title: '课程'}
+  // {id: 3, name: 'LightCourse', title: '轻课'},
+  // {id: 4, name: 'Micro', title: '学位课'}
 ]
 export default {
 
@@ -78,9 +78,9 @@ export default {
     }
   },
   computed: {
-    userInfo(){
+    userInfo () {
       return this.$store.getters.userInfo
-    },
+    }
   },
   methods: {
     // shopCartHandler(){
@@ -94,8 +94,8 @@ export default {
     }
 
   },
-  mounted(){
-    
+  mounted () {
+
   }
 
 }

@@ -13,12 +13,9 @@ import '../static/css/nav.css'
 import '../static/rbac/css/rbac.css'
 import Vue2Editor from 'vue2-editor'
 
-
 Vue.use(Vue2Editor)
 
 Vue.use(ElementUI)
-
-
 
 Vue.config.productionTip = false
 

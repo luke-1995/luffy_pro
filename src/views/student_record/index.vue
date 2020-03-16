@@ -118,7 +118,6 @@ export default {
       console.log(this.editform)
       srPatch(this.editform)
         .then(res => {
-          
           alert('submit!')
           this.isedit = false
         })
@@ -168,9 +167,9 @@ export default {
       .then(res => {
         console.log(res)
         this.tableData = res
-        let uid=this.$store.getters.userInfo.id
-        this.addform.student=sid;
-        this.addform.teacher=uid;
+        let uid = this.$store.getters.userInfo.id
+        this.addform.student = sid
+        this.addform.teacher = uid
         console.log(res)
       })
       .catch(error => {
@@ -183,5 +182,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="css" scoped>
+
 </style>

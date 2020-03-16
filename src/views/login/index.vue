@@ -75,115 +75,113 @@
 </template>
 
 <script>
-import { login, registerApi } from "@/api/login";
+import { login, registerApi } from '@/api/login'
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  data () {
     var checkUsername = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("用户名不能为空"));
+        return callback(new Error('用户名不能为空'))
       }
-      callback();
-    };
+      callback()
+    }
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass')
         }
-        callback();
+        callback()
       }
-    };
+    }
     var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       isregister: false,
       getValidate: {},
       loginForm: {
-        username: "a",
-        password: "123"
+        username: 'a',
+        password: '123'
       },
       addError: {},
-      formLabelWidth: "100px",
+      formLabelWidth: '100px',
       ruleForm: {
-        password: "",
-        checkPass: "",
-        age: ""
+        password: '',
+        checkPass: '',
+        age: ''
       },
       rules: {
-        password: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        username: [{ validator: checkUsername, trigger: "blur" }]
+        password: [{ validator: validatePass, trigger: 'blur' }],
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+        username: [{ validator: checkUsername, trigger: 'blur' }]
       }
-    };
+    }
   },
   methods: {
-    register() {
-      this.isregister = true;
+    register () {
+      this.isregister = true
     },
-    Register(userinfo) {
-      console.log(222);
+    Register (userinfo) {
+      console.log(222)
     },
-    submitForm(formName) {
-      console.log(formName);
+    submitForm (formName) {
+      console.log(formName)
       this.$refs[formName].validate(valid => {
-        console.log(formName, 1111, valid);
+        console.log(formName, 1111, valid)
         if (valid) {
-          console.log(formName);
-          if (formName === "loginForm") {
+          console.log(formName)
+          if (formName === 'loginForm') {
             this.$store
-              .dispatch("Login", this.loginForm)
+              .dispatch('Login', this.loginForm)
               .then(error => {
                 if (!error) {
                   this.$router.push({
-                    path: this.$route.params.redirect || "/"
-                  });
+                    path: this.$route.params.redirect || '/'
+                  })
                 } else {
-                  alert(error);
+                  alert(error)
                 }
               })
               .catch(() => {
-                console.log("error submit!!");
-              });
+                console.log('error submit!!')
+              })
           } else {
-            console.log(111111);
+            console.log(111111)
             registerApi(this.ruleForm)
               .then(res => {
                 console.log(res)
                 if (res.errors) {
-                  alert(res.errors);
+                  alert(res.errors)
                 } else {
-                  this.isregister=false;
-                  alert('submit');
+                  this.isregister = false
+                  alert('submit')
                 }
-                
-                
               })
               .catch(error => {
-                console.log(error);
-              });
+                console.log(error)
+              })
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
 
       //   this.$store.disp;
     }
   },
-  created() {}
-};
+  created () {}
+}
 </script>
 
 <style lang="css" scoped>

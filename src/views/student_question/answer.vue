@@ -19,7 +19,12 @@
             </el-table-column>
             <el-table-column label="问题状态" width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.question_status }}</span>
+                <span style="margin-left: 10px">{{ scope.row.question_status_info }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="学生" width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.student_name }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -85,7 +90,7 @@
 
 <script>
 import Layout from '@/layout/rbac'
-import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
+import { taGet, taPatch } from '@/api/teacher_answer'
 
 export default {
   data () {
@@ -120,9 +125,13 @@ export default {
         })
     },
     editDate () {
-      rolePatch(this.editform)
+      delete this.editform.student_name
+      delete this.editform.question_status_info
+      this.editform.question_status = 2
+      taPatch(this.editform)
         .then(res => {
           alert('submit!')
+          this.editform.question_status_info = '已回答'
           this.isedit = false
         })
         .catch(error => {
@@ -166,7 +175,7 @@ export default {
     }
   },
   created () {
-    roleGet()
+    taGet()
       .then(res => {
         this.tableData = res
         console.log(res)

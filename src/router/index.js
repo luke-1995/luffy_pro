@@ -5,7 +5,6 @@ import store from '../store'
 router.beforeEach((to, from, next) => {
   if (Config.WhiteList.indexOf(to.path) !== -1 && !localStorage.getItem('access_token')) {
     next()
-    
   } else {
     if (!localStorage.getItem('access_token')) {
       next(`/login?redirect=${to.path}`)
@@ -16,7 +15,7 @@ router.beforeEach((to, from, next) => {
         let username = localStorage.getItem('username')
         let shop_cart_num = localStorage.getItem('shop_cart_num')
         let id = localStorage.getItem('id')
-        let user = {id:id,username: username, shop_cart_num: shop_cart_num}
+        let user = {id: id, username: username, shop_cart_num: shop_cart_num}
         store.dispatch('updateUserinfo', user)
         next()
       }

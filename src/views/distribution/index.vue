@@ -55,38 +55,37 @@
           </div>
         </div>
 
-
       </div>
     </template>
   </Layout>
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
+import Layout from '@/layout/rbac'
 
 export default {
-  name: "Role",
-  data() {
+  name: 'Role',
+  data () {
     return {
       firstTableDate: [
-        { id: 1, username: "title" },
-        { id: 2, username: "title" }
+        { id: 1, username: 'title' },
+        { id: 2, username: 'title' }
       ],
       secondTableDate: [
-        { id: 88, username: "title11" },
-        { id: 99, username: "title22" }
+        { id: 88, username: 'title11' },
+        { id: 99, username: 'title22' }
       ],
       firstArray: [],
       secondArray: [],
       thirdArray: [],
-      user: "",
-      role: "",
+      user: '',
+      role: '',
       isSave: false,
       // 当角色改变时,改为true
       isSaveP: false,
       // 当权限改变时,改为true
       checked: false,
-      clickId: "",
+      clickId: '',
       multipleSelection: [],
       activeNames: [1],
       isadd: false,
@@ -97,165 +96,165 @@ export default {
       isPerEdit: false,
       addform: {},
       editform: {
-        title: "title"
+        title: 'title'
       },
-      formLabelWidth: "100px"
-    };
+      formLabelWidth: '100px'
+    }
   },
   methods: {
-    changeActive(row) {
-      this.clickId = row.id;
+    changeActive (row) {
+      this.clickId = row.id
     },
-    handle(row, event, column) {
-      console.log(column);
+    handle (row, event, column) {
+      console.log(column)
     },
 
-    change() {
-      this.isSaveP = true;
+    change () {
+      this.isSaveP = true
     },
-    add(data) {
+    add (data) {
       if (data === this.firstTableDate) {
-        this.isadd = true;
+        this.isadd = true
       } else if (data === this.secondTableDate) {
-        this.isSecondAdd = true;
+        this.isSecondAdd = true
       } else {
-        this.isPerAdd = true;
+        this.isPerAdd = true
       }
     },
-    edit(data, id) {
+    edit (data, id) {
       if (data === this.firstTableDate) {
-        this.isedit = true;
+        this.isedit = true
       } else if (data === this.secondTableDate) {
-        this.isSecondEdit = true;
+        this.isSecondEdit = true
       } else {
-        this.isPerEdit = true;
+        this.isPerEdit = true
       }
     },
-    del(id) {
-      console.log(id);
+    del (id) {
+      console.log(id)
     },
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-      console.log(row);
+    setCurrent (row) {
+      this.$refs.singleTable.setCurrentRow(row)
+      console.log(row)
     },
-    hasPermission(id) {
+    hasPermission (id) {
       this.$http
         .hasPermission(id)
         .then(res => {
-          console.log(res);
+          console.log(res)
           if (res.data) {
-            console.log(res);
-            console.log(res.data.data);
-            this.$refs.mychild.setCheckedKeys(res.data.data);
+            console.log(res)
+            console.log(res.data.data)
+            this.$refs.mychild.setCheckedKeys(res.data.data)
           }
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
-    hasPer(id) {
+    hasPer (id) {
       this.$http
         .hasPer(id)
         .then(res => {
-          console.log(res);
+          console.log(res)
           if (res.data) {
-            console.log(res);
-            console.log(res.data.data);
-            this.$refs.mychild.setCheckedKeys(res.data.data);
+            console.log(res)
+            console.log(res.data.data)
+            this.$refs.mychild.setCheckedKeys(res.data.data)
           }
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
-    roleChange(val) {
-      this.hasPer(val.id);
-      this.role = val;
+    roleChange (val) {
+      this.hasPer(val.id)
+      this.role = val
       // 保存权限用的
     },
-    handleCurrentChange(val) {
-      this.user = val;
+    handleCurrentChange (val) {
+      this.user = val
 
-      this.toggleSelection();
+      this.toggleSelection()
       // this.checkedBox(this.secondTableDate[1])
-      this.hasPermission(val.id);
+      this.hasPermission(val.id)
       // 设置树形控件的key
       this.secondTableDate.forEach(role => {
         if (val.roles.indexOf(role.id) !== -1) {
-          this.$refs.multipleTable.toggleRowSelection(role);
+          this.$refs.multipleTable.toggleRowSelection(role)
         }
-      });
-      this.$refs.multipleTable.setCurrentRow();
-      this.currentRow = val;
+      })
+      this.$refs.multipleTable.setCurrentRow()
+      this.currentRow = val
     },
 
-    handleSelectionChange(val) {
-      this.isSave = true;
+    handleSelectionChange (val) {
+      this.isSave = true
       // console.log(22222,val)
       // this.hasPer(val.id);
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
-    handleCurrentChange_2(val) {
-      this.isSave = true;
-      this.currentRow = val;
+    handleCurrentChange_2 (val) {
+      this.isSave = true
+      this.currentRow = val
     },
-    toggleSelection(rows) {
+    toggleSelection (rows) {
       if (rows) {
         rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
       } else {
-        this.$refs.multipleTable.clearSelection();
+        this.$refs.multipleTable.clearSelection()
       }
     },
-    checkedBox(row) {
-      this.$refs.multipleTable.toggleRowSelection(row);
+    checkedBox (row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
     },
-    getRoles() {
-      let li = [];
+    getRoles () {
+      let li = []
       this.multipleSelection.forEach((item, index) => {
-        console.log(item, 6666);
-        li.push(item.id);
-      });
-      return li;
+        console.log(item, 6666)
+        li.push(item.id)
+      })
+      return li
     },
-    save() {
+    save () {
       if (!this.user) {
-        alert("请选择用户");
+        alert('请选择用户')
       } else {
-        console.log(this.getRoles());
-        console.log(this.user.roles);
-        this.user.roles = this.getRoles();
+        console.log(this.getRoles())
+        console.log(this.user.roles)
+        this.user.roles = this.getRoles()
         this.$http
           .userPatch(this.user)
           .then(res => {
-            console.log(res);
+            console.log(res)
             if (res.data) {
-              console.log(res);
-              console.log(res.data.data);
-              alert("ok");
+              console.log(res)
+              console.log(res.data.data)
+              alert('ok')
             }
           })
           .catch(err => {
-            console.log(err);
-          });
+            console.log(err)
+          })
       }
       this.multipleSelection.forEach((item, index) => {
-        console.log(item, 6666);
-      });
+        console.log(item, 6666)
+      })
     },
-    save_1() {
+    save_1 () {
       if (!this.role) {
-        alert("请选择角色");
+        alert('请选择角色')
       } else {
-        let li = this.$refs.mychild.getCheckedKeys();
-        console.log(li);
-        this.role.permissions = li;
-        console.log(this.role);
+        let li = this.$refs.mychild.getCheckedKeys()
+        console.log(li)
+        this.role.permissions = li
+        console.log(this.role)
         this.$http
           .patchPer(this.role)
           .then(res => {
-            console.log(res);
+            console.log(res)
             // if (res.data) {
             //     console.log(res)
             //     console.log(res.data.data)
@@ -263,15 +262,15 @@ export default {
             // }
           })
           .catch(err => {
-            console.log(err);
-          });
+            console.log(err)
+          })
       }
     },
-    handleChange(val) {
-      console.log(val);
+    handleChange (val) {
+      console.log(val)
     }
   },
-  created() {
+  created () {
     // this.$http
     //   .user()
     //   .then(res => {
@@ -303,10 +302,10 @@ export default {
     //   });
   },
   components: {
-    Layout,
+    Layout
 
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

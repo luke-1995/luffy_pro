@@ -1,16 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-
 Vue.use(Router)
-
 
 export const constantRouterMap = [
   {
     path: '/login',
     // meta: { title: '登录', noCache: true },
     component: () => import('@/views/login/index'),
-    name:'login',
+    name: 'login',
     hidden: true
   },
   {
@@ -31,8 +29,24 @@ export const constantRouterMap = [
       {
         path: 'home',
         component: () => import('@/views/home/index'),
-        name: 'Home',
+        name: 'home',
         meta: { title: '首页', icon: 'index', affix: true, noCache: true }
+      },
+      {
+        path: '/course',
+        name: 'course',
+        component: () => import('@/views/course/course.vue')
+
+      },
+      {
+        path: '/course/detail/:cid',
+        name: 'course_detail',
+        component: () => import('@/views/course/CourseDetail')
+      },
+      {
+        path: '/shopping_cart',
+        name: 'shopping_cart',
+        component: () => import('@/views/shopping/shopping_cart')
       }
     ]
   },
@@ -44,13 +58,13 @@ export const constantRouterMap = [
   {
     path: '/student_record/:sid',
     component: () => import('@/views/student_record/index'),
-    name:'student_record'
+    name: 'student_record'
 
   },
   {
     path: '/student_list',
     component: () => import('@/views/student_list/index'),
-    name:'student_list'
+    name: 'student_list'
 
   },
   {
@@ -59,8 +73,8 @@ export const constantRouterMap = [
 
   },
   {
-    path: '/homework/comment',
-    component: () => import('@/views/homework/comment')
+    path: '/homework/correction',
+    component: () => import('@/views/homework/correction')
 
   },
   {
@@ -75,20 +89,16 @@ export const constantRouterMap = [
 
   },
   {
-    path: 'rbac/course',
+    path: '/rbac/course',
     component: () => import('@/views/course/index')
-
   },
-  {
-    path: 'course',
-    component: () => import('@/views/course/Course')
+  // {
+  //   path: '/course',
+  //   name:'course',
+  //   component: () => import('@/views/course/course.vue')
 
-  },
-  {
-    path: 'course/detail',
-    component: () => import('@/views/course/CourseDetail')
+  // },
 
-  },
   {
     path: '/order',
     component: () => import('@/views/order/index')
@@ -99,6 +109,29 @@ export const constantRouterMap = [
     component: () => import('@/views/distribution/index')
 
   }
+  // {
+  //   path:"/home/light-course",
+  //   name:'LightCourse',
+  //   component:LightCourse
+  // },
+  // {
+  //   path:"/micro",
+  //   name:'Micro',
+  //   component:Micro
+  // },
+  // 课程详情
+  // {
+  //   path:"/course/detail/:cid",
+  //   // name:'course.detail',
+  //   component: () => import('@/views/course/CourseDetail')
+  // },
+
+  // 购物车的页面
+  // {
+  //   path:"/purchase/shopping_cart",
+  //   name:'purchase.shop',
+  //   component:Cart
+  // }
 
   // {
   //   path: '/',
@@ -107,13 +140,10 @@ export const constantRouterMap = [
 
 ]
 
-const router= new Router({
+const router = new Router({
   routes: constantRouterMap,
-  linkActiveClass:'is-active',
+  linkActiveClass: 'is-active',
   mode: 'history'
 })
-
-
-
 
 export default router

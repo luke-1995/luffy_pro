@@ -1,112 +1,113 @@
 <template>
-	<div class="wrap">
-		<div class="web-course-banner">
-			<div class="container">
-				<div class="title">
-					<img src="../../../static/images/play.png" height="67" width="67" alt="">
-					<h1 class="course-title">{{courseDetail.name}}</h1>
-				</div>
-				<span class="course-text">1</span>
-				<div class="course-list">
-					<ul>
-					    <li class="detail-item">
+  <div class="wrap">
+    <div class="web-course-banner" v-if="courseDetail.course">
+      <div class="container">
+        <div >
+          <img src="../../../static/images/play.png" height="67" width="67" alt />
+          <h1 class="course-title">{{courseDetail.course.title}}</h1>
+        </div>
+        <span class="course-text" >{{courseDetail.course.title}}</span>
+        <div class="course-list">
+          <ul>
+            <!-- <li class="detail-item">
 					    	难度：初级
-					    </li>
-					    <li class="sep"></li>
-					    <li class = detail-item>时长：{{courseDetail.hours}}小时</li>
-					    <li class="sep"></li>
-					     <li class = detail-item>学习人数：{{courseDetail.learn_number}}人</li>
-					    <li class="sep"></li>
-					    <li class = detail-item>评分 10.0</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="course-review">
-			<ul class="review-head-wrap">
-				<li class="head-item">课程概述</li>
-				<li class="head-item">课程章节</li>
+            </li>-->
+            <li class="sep"></li>
+            <li class="detail-item">时长：{{courseDetail.hours}}小时</li>
+            <li class="sep"></li>
+            <li class="detail-item">学习人数：{{courseDetail.course.study_num}}人</li>
+            <li class="sep"></li>
+            <!-- <li class = detail-item>评分 10.0</li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="course-review">
+      <ul class="review-head-wrap">
+        <li class="head-item">课程概述</li>
+        <!-- <li class="head-item">课程章节</li>
 				<li class="head-item">用户评价(10)</li>
-				<li class="head-item">常见问题</li>
-
-			</ul>
-		</div>
-		<!-- 课程详情 -->
-		<div class="course-detail">
-			<div class="container">
-				<div class="course-detail-text">
-					<h3>课程概述</h3>
-					<p>
-						Django是Python语言中最流行、最强大的WEB框架，可快速构建稳定强大的WEB项目，大大提高开发效率，很多知名项目都是基于Django开发，如Disqus、Pinterest、Instagram、Bitbucket等， Django官方Slogan是The framework for perfectionist with deadline! 一个为完美主义者且又开发工期很紧的人设计的框架，事实确实如此，Django自身集成了丰富的WEB开发通用组件，如用户认证、分页、中间件、缓存、session等，可以避免浪费大量时间重复造轮子。人生苦短，join the course now and start to build your first web program based on Django.
-					</p>
-				</div>
-				<div class="course-img">
+        <li class="head-item">常见问题</li>-->
+      </ul>
+    </div>
+    <!-- 课程详情 -->
+    <div class="course-detail">
+      <div class="container">
+        <div class="course-detail-text">
+          <h3>课程概述</h3>
+          <p>{{courseDetail.summary}}</p>
+        </div>
+        <!-- <div class="course-img">
 					<img src="" alt="">
-				</div>
-			</div>
-		</div>
-		<div class="course-price">
-			<div class="container">
-				<span>可以根据不同的学习情况购买不一样的学习套餐哦！</span>
-				<ul class="course-price-item" >
-					<li v-for='(item,index) in coursePrice' :key='item.id' @click='priceHandler(index)' :class='{active:index===priceIndex}'>
-						<p class="price" :class='{active:index===priceIndex}'>¥{{item.price}}</p>
-						<p class="time" :class='{active:index===priceIndex}'>{{item.time}}</p>
-					</li>
-
-				</ul>
-				<div class="course-action">
-					<button class="left">购买</button>
-					<button class="right" @click='addAShopping'>加入购物车</button>
-				</div>
-			</div>
-		</div>
-
-	</div>
+        </div>-->
+      </div>
+    </div>
+    <div class="course-price">
+      <div class="container">
+        <span>可以根据不同的学习情况购买不一样的学习套餐哦！</span>
+        <ul class="course-price-item" v-if='courseDetail.course'>
+          <li
+            v-for="(item) in courseDetail.course.price_policy"
+            :key="item.id"
+            @click="priceHandler(item.id)"
+            :class="{active:item.id===priceId}"
+          >
+            <p class="price" :class="{active:item.id===priceId}">¥{{item.price}}</p>
+            <p class="time" :class="{active:item.id===priceId}">{{item.valid_period}}</p>
+          </li>
+        </ul>
+        <div class="course-action">
+          <!-- <button class="left">购买</button> -->
+          <button class="right" @click="addShopping">加入购物车</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { cdGet } from '@/api/course'
 export default {
-
   name: 'CourseDetail',
   data () {
-  	return {
-  		courseDetail: {},
-  		priceIndex: null,
-  		userinfo: window.localStorage.getItem('access_token'),
-  		coursePrice: [
-  		{id: 1, price: 99, time: '有效期一个月'},
-  		{id: 2, price: 99, time: '有效期两个月'},
-  		{id: 3, price: 99, time: '有效期三个月'}
-  		]
-  	}
+    return {
+      courseDetail: {},
+      priceId: null,
+      coursePrice: [
+        // {id: 1, price: 99, time: '有效期一个月'},
+        // {id: 2, price: 99, time: '有效期两个月'},
+        // {id: 3, price: 99, time: '有效期三个月'}
+      ]
+    }
   },
   methods: {
-  	priceHandler (index) {
-  		this.priceIndex = index
-  	},
-  	addAShopping () {
-  		if (this.priceIndex) {
-  			if (this.userinfo) { console.log('ok') } else {
-  				console.log(121212)
-  				this.$router.push({name: 'Login', query: {return_url: window.location.href}})
-  			}
-  		} else {
-  			this.$message({
-  			 	message: '未选择套餐',
-  			 	center: true
-  			 })
-  		}
-  	}
+    priceHandler (id) {
+      this.priceId = id
+    },
+    addShopping () {
+      console.log(this.priceId)
+      if (this.priceId) {
+        this.$router.push({ name: 'shopping_cart' })
+      } else {
+        this.$message({
+          message: '未选择套餐',
+          center: true
+        })
+      }
+    }
   },
   created () {
-  	this.$http.courseDetail(this.$route.params.courseId)
-  	.then(res => {
-  		if (!res.data.error_no) {
-  			this.courseDetail = res.data.data
-  			console.log(this.courseDetail)
-  		}
-  	}).catch(err => {})
+    let id = this.$route.params.cid
+    cdGet(id)
+      .then(res => {
+        if (res) {
+		console.log(res)
+          this.courseDetail = res
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
@@ -237,7 +238,7 @@ height: 80px;
 	    letter-spacing: 1.57px;
 	    display: inline-block;
 	    margin-top: 102px
-}
+} 
 .course-price ul{
 	/*width: 800px;*/
 	margin: 50px auto;
@@ -251,7 +252,9 @@ height: 80px;
 	height: 112px;
 	border: 1px solid #979797;
 }
-
+.course-price ul li.active{
+	background: #00CD23;
+}
 .course-price ul li p:first-child{
 	font-size: 24px;
    	 letter-spacing: 1.92px;
@@ -265,11 +268,6 @@ height: 80px;
 	    letter-spacing: 1.6px;
 	    margin-top: 9px;
 }
-.course-price ul li.active{
-	background: #00CD23;
-
-}
-
 .course-price ul li p.active{
 	color: #fff;
 }
@@ -305,4 +303,5 @@ height: 80px;
 	background: #f5a623 url() no-repeat 125px 15px!important;
 }
 
+    
 </style>

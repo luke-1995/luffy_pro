@@ -84,7 +84,7 @@ import { slGet } from '@/api/student_list'
 export default {
   data () {
     return {
-      tableData: [{id:0,username:'title'}],
+      tableData: [{id: 0, username: 'title'}],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,

@@ -15,17 +15,18 @@ export function scPost (params) {
   })
 }
 
-export function scPatch (params) {
+export function scPut (params) {
   return request({
-    url: `shopping_cart/${params.id}/`,
-    method: 'patch',
+    url: 'shopping_cart/',
+    method: 'put',
     data: params
   })
 }
 
-export function scDel (id) {
+export function scDel (params) {
   return request({
-    url: `shopping_cart/${id}/`,
-    method: 'delete'
+    url: 'shopping_cart/',
+    method: 'delete',
+    data: params,
   })
 }

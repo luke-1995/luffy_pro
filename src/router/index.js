@@ -2,6 +2,7 @@ import Config from '@/settings'
 import router from './router'
 import store from '../store'
 
+
 router.beforeEach((to, from, next) => {
   if (Config.WhiteList.indexOf(to.path) !== -1 && !localStorage.getItem('access_token')) {
     next()
@@ -34,5 +35,20 @@ export const getUserinfo = () => {
   }
   return false
 }
+
+
+// const getShoppingCart=()=>{
+//   scGet()
+//       .then(res => {
+//         if (res.code === 1000) {
+//           console.log(res.data);
+//         } 
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+// }
+
+
 
 export default router

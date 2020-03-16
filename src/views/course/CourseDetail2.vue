@@ -74,7 +74,8 @@ export default {
   		brief:'',
   		coursedetail:{},//课程详情数据
   		currentIndex:null,
-  		prices:[]
+  		prices:[],
+		test:[],
   	}
   },
   methods:{

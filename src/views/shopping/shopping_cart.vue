@@ -23,47 +23,48 @@
           <el-table-column prop="name" label="有效期" width="160">
             <template slot-scope="scope">
               <!-- 默认选中 select 中v-model的值 等于 option中value -->
-              <el-select 
-              v-model='scope.row.price_policy_default_id'
-              @change="selectPriceChange"
+              <el-select
+                v-model="scope.row.price_policy_default_id"
+                @change="selectPriceChange($event,scope.row)"
               >
                 <el-option
                   v-for="(item) in scope.row.price_policy_dic"
                   :key="item.id|toStr"
                   :label="item.valid_period"
                   :value="item.id|toStr"
-
                 ></el-option>
               </el-select>
             </template>
           </el-table-column>
           <el-table-column prop="coursePrice" label="单价" width="190" show-overflow-tooltip>
-      
-            <template slot-scope="scope" style="text-align: center;">
-              {{scope.row.price_policy_dic[scope.row.price_policy_default_id].price}}元
+            <template
+              slot-scope="scope"
+              style="text-align: center;"
+            >{{scope.row.price_policy_dic[scope.row.price_policy_default_id].price}}元</template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <template>
+                <el-popconfirm title="确定删除吗？" @onConfirm="del(scope.row)">
+                  <el-button slot="reference" type="danger" size="mini">删除</el-button>
+                </el-popconfirm>
+              </template>
             </template>
           </el-table-column>
-          <el-table-column label="操作"  >
-              <template slot-scope="scope">
-                <template>
-                  <el-popconfirm title="确定删除吗？" @onConfirm="del(scope.row)">
-                    <el-button slot="reference" type="danger" size="mini">删除</el-button>
-                  </el-popconfirm>
-                </template>
-              </template>
-            </el-table-column>
         </el-table>
       </template>
     </div>
-    <div class="total">
-      <el-button type="primary">去结算</el-button>
-      <h3>总计: ¥399</h3>
+    <div class="total clearfix">
+      <el-button type="primary" @click="buy">去结算</el-button>
+      <h3>¥ {{total}}</h3>
+      <h3>总计:</h3>
     </div>
   </div>
 </template>
 
 <script>
 import { scGet, scPost, scPut, scDel } from "@/api/shopping_cart";
+import { smPost } from "@/api/settlement";
 import Config from "@/settings";
 export default {
   name: "ShopCart",
@@ -72,20 +73,51 @@ export default {
       tableData: [],
       multipleSelection: [],
       pre_url: Config.pre_url,
-      kk:1
+      kk: 1
     };
   },
   filters: {
-  toStr: function (value) {
-    value = value.toString()
-    return value
-  }
-},
+    toStr: function(value) {
+      value = value.toString();
+      return value;
+    }
+  },
   methods: {
-    toNum(value) {
-
-        value = parseInt(value)
-        return value
+    buy() {
+      console.log(this.multipleSelection, typeof this.multipleSelection);
+      let flag = false;
+      if (this.multipleSelection.length !== 0) {
+        let course_list = this.multipleSelection.map(function(
+          element,
+          index,
+          array
+        ) {
+          return element.course_id;
+        });
+        smPost({course_list:course_list})
+          .then(res => {
+            if (res.code === 1000) {
+              this.$router.push({name:'settlement'});
+            } else {
+              this.$message({
+                message: res.errors,
+                center: true
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message({
+              message: "结算失败,请重新结算",
+              center: true
+            });
+          });
+      } else {
+        this.$message({
+          message: "请选择商品",
+          center: true
+        });
+      }
     },
     toggleSelection(rows) {
       if (rows) {
@@ -96,41 +128,66 @@ export default {
         this.$refs.multipleTable.clearSelection();
       }
     },
-    selectPriceChange(val){
-      console.log(val,11)
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    del (row) {
-      let params={
-        course_list:new Array(row.course_id)
-      }
-      scDel(params)
+    selectPriceChange(val, row) {
+      let params = {
+        course_id: row.course_id,
+        price_policy_id: val
+      };
+      scPut(params)
         .then(res => {
-          if (!res.data) {
-            this.delFun(row)
+          if ((res.code = 1000)) {
+            this.$message({
+              message: "购物车更新成功",
+              center: true
+            });
+          } else {
+            this.$message({
+              message: res.errors,
+              center: true
+            });
           }
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
           this.$message({
-            message: '移除购物车失败',
+            message: "移除购物车失败",
             center: true
           });
-        })
+        });
     },
-    delFun (i) {
-      var index = this.tableData.indexOf(i)
-      console.log(index)
-      this.tableData.splice(index, 1)
-      this.$message({
-            message: '移除购物车成功',
+    handleSelectionChange(val) {
+      // console.log(val);
+      this.multipleSelection = val;
+    },
+    del(row) {
+      let params = {
+        course_list: new Array(row.course_id)
+      };
+      scDel(params)
+        .then(res => {
+          if (!res.data) {
+            this.delFun(row);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message({
+            message: "移除购物车失败",
             center: true
           });
+        });
+    },
+    delFun(i) {
+      var index = this.tableData.indexOf(i);
+      console.log(index);
+      this.tableData.splice(index, 1);
+      this.$message({
+        message: "移除购物车成功",
+        center: true
+      });
       // let Num = this.$store.getters.userInfo.shop_cart_num;
-      let num = this.tableData.length
-      this.$store.commit('updateShoppingCart',num)
+      let num = this.tableData.length;
+      this.$store.commit("updateShoppingCart", num);
     }
   },
   created() {
@@ -150,6 +207,18 @@ export default {
         console.log(err);
       });
   },
+  computed: {
+    total: function() {
+      let total_money = 0;
+      this.multipleSelection.forEach(row => {
+        let money = row.price_policy_dic[row.price_policy_default_id].price;
+        money = parseInt(money);
+        total_money += money;
+      });
+      console.log(total_money);
+      return total_money;
+    }
+  }
   // beforeCreate() {
   //   let condition = this.$route.params;
   //   // let uid = this.$store.getters.userInfo.id
@@ -221,7 +290,6 @@ select {
 .shopping-cart-wrap .total button {
   float: right;
   margin-top: 20px;
-  
 }
 
 .shopping-cart-wrap .total h3 {

@@ -21,6 +21,7 @@
                 @change="couponChange($event,scope.row)"
                 placeholder="请选择优惠卷"
               >
+                <el-option value="0" label="-------"></el-option>
                 <el-option
                   v-for="(item) in scope.row.course_coupon_dic"
                   :key="item.id|toStr"
@@ -45,40 +46,55 @@
     </div>
     <div class="col-md-4 col-md-offset-1">
       <p></p>
-      <el-select 
-      v-model="default_global_coupon_id" 
-      @change="globalCouponChange"
-      placeholder="请选择通用优惠卷">
+      <el-select
+        v-model="default_global_coupon_id"
+        @change="globalCouponChange"
+        placeholder="请选择通用优惠卷"
+      >
+        <el-option value="0" label="-------"></el-option>
         <el-option
           v-for="item in global_coupon"
           :key="item.id|toStr"
           :label="item.name"
           :value="item.id|toStr"
-          
         ></el-option>
       </el-select>
     </div>
     <div class="col-md-6 col-md-offset-6">
       <p></p>
-      <p>商品总额:{{total}}元</p>
+      <p>商品总额:{{total|toFix}}元</p>
       <p>
-         <el-checkbox v-model="checked" >是否使用贝里</el-checkbox>
+        <el-checkbox v-model="checked" @change="isChecked">是否使用贝里</el-checkbox>
       </p>
-      <p>优惠卷抵扣:{{couponTotal}} 元</p>
+      <p>优惠卷抵扣:{{couponTotal|toFix}} 元</p>
     </div>
     <div class="col-md-5 col-md-offset-5">
       <p></p>
 
       <h3>
-        实付款:{{actualTotal}}元
+        实付款:{{actualTotal|toFix}}元
         <el-button type="warning" @click="buy">立即支付</el-button>
       </h3>
     </div>
+    <!-- <el-dialog title="支付表(在redis中生成订单,等待支付)" :visible.sync="ispay">
+      <img
+        src="https://m.qpic.cn/psc?/V13PfEOv10xX31/N6ix9ropXhYRy3eob.4AqyWQh09s46z1Ex2dPmrkTr9MGcu4dzwZrFTgJHiBn2GYwgFYKgn0NkgmUIUCQv4JLA!!/b&bo=OATJBQAAAAADB9I!&rf=viewer_4"
+        alt
+        style="wight:200px;height:200px;"
+
+      />
+      <p>免费获得,已用贝里或抵扣卷抵消</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="ispay = false">取 消</el-button>
+        <el-button type="primary" @click="payment">模拟完成支付,在数据库生成订单</el-button>
+      </div>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
 import { smGet, smPost, smPut } from "@/api/settlement";
+import { pPost } from "@/api/payment";
 import Config from "@/settings";
 export default {
   name: "ShopCart",
@@ -96,30 +112,82 @@ export default {
       ],
       pre_url: Config.pre_url,
       kk: 1,
-      checked: true,
       global_coupon: {},
-      // global_coupon_total: 0,
-      // course_coupon_total: 0,
-      default_global_coupon_id: '',
-      checked:false,
+      default_global_coupon_id: "",
+      checked: false,
+      balance: 0,
+      useBalance: 0,
+      ispay: false,
+      isfree: false
     };
   },
   filters: {
     toStr: function(value) {
-
       if (value) {
         value = value.toString();
+      }
+      return value;
+    },
+    toFix: function(value) {
+      if (value) {
+        value = value.toFixed(2);
       }
       return value;
     }
   },
   methods: {
-    useBalance(){
-
+    buy() {
+      // 分为两种情况,一种为实付款为0,一种不为0
+      let params = {
+        balance: this.useBalance,
+        total_price: this.actualTotal
+      };
+      pPost(params)
+        .then(res => {
+          console.log(res);
+          if (res.code === 1000) {
+            if (!this.actualTotal) {
+              // this.freePayment();
+            } else {
+              this.$router.push({
+                name: "payment",
+                params: {
+                  actualTotal: this.actualTotal,
+                  orderId: res.data.order_id
+                }
+              });
+            }
+          } else {
+            this.$message({
+              message: res.errors,
+              center: true
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    buy(){
+    createOrder() {
+      let payment_type = null;
+      if (!this.actualTotal) {
+        if (!this.useBalance) {
+          payment_type = 2;
+        } else {
+          payment_type = 3;
+        }
+        this.isfree = true;
+      } else {
+        payment_type = 0;
+        // 默认是微信支付
+      }
 
+      let params = {
+        payment_type: payment_type,
+        actual_amount: this.actualTotal
+      };
     },
+
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -130,66 +198,157 @@ export default {
       }
     },
     couponChange(val, row) {
-      
-      // this.course_coupon_total=row.course_coupon_dic[val].money_equivalent_value
+      console.log(typeof val, val, 1111111);
       let params = {
         coupon_id: val,
         course_id: row.course_id
       };
-      smPut(params)
-        .then(res => {
-          if ((res.code = 1000)) {
+      if (!parseInt(val)) {
+        smPut(params)
+          .then(res => {
+            if ((res.code = 1000)) {
+              this.$message({
+                message: "更改课程优惠卷成功",
+                center: true
+              });
+              let index = this.tableData.indexOf(row);
+            } else {
+              this.$message({
+                message: res.errors,
+                center: true
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
             this.$message({
-              message: "更改课程优惠卷成功",
+              message: "更改课程优惠卷失败",
               center: true
             });
-            let index = this.tableData.indexOf(row);
-            this.tableData[index].default_coupon_id=val;
-          } else {
-            this.$message({
-              message: res.errors,
-              center: true
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message({
-            message: "结算失败",
-            center: true
           });
+        return;
+      }
+
+      let index = this.tableData.indexOf(row);
+      this.tableData[index].default_coupon_id = val;
+      let price = parseFloat(row.price);
+      let minimum_consume = row.course_coupon_dic[val].minimum_consume;
+      let total = this.discount(row.course_coupon_dic[val], price);
+      if (minimum_consume > price) {
+        this.tableData[index].default_coupon_id = null;
+        this.$message({
+          message: "优惠卷错误,优惠后商品不满足最低消费",
+          center: true
         });
+      } else if (total > price) {
+        this.tableData[index].default_coupon_id = null;
+        this.$message({
+          message: "优惠卷错误,优惠后商品的价格不能小于0",
+          center: true
+        });
+      } else {
+        // let params = {
+        //   coupon_id: val,
+        //   course_id: row.course_id
+        // };
+        smPut(params)
+          .then(res => {
+            if ((res.code = 1000)) {
+              this.$message({
+                message: "更改课程优惠卷成功",
+                center: true
+              });
+              let index = this.tableData.indexOf(row);
+              this.tableData[index].default_coupon_id = val;
+            } else {
+              this.$message({
+                message: res.errors,
+                center: true
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message({
+              message: "结算失败",
+              center: true
+            });
+          });
+      }
     },
     globalCouponChange(val) {
-      // console.log(val, row, 111);
-      // this.course_coupon_total=row.course_coupon_dic[val].money_equivalent_value
       let params = {
-        global_coupon_id: val,
+        global_coupon_id: val
       };
-      console.log(val,11111)
-      smPut(params)
-        .then(res => {
-          if ((res.code = 1000)) {
+      if (!parseInt(val)) {
+        smPut(params)
+          .then(res => {
+            if ((res.code = 1000)) {
+              this.$message({
+                message: "更改通用优惠卷成功",
+                center: true
+              });
+            } else {
+              this.$message({
+                message: res.errors,
+                center: true
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
             this.$message({
-              message: "更改通用优惠卷成功",
+              message: "更改通用优惠卷失败",
               center: true
             });
-            this.default_global_coupon_id = val
-          } else {
-            this.$message({
-              message: res.errors,
-              center: true
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message({
-            message: "结算失败",
-            center: true
           });
+        return;
+      }
+      this.default_global_coupon_id = val;
+      let minimum_consume = this.global_coupon[val].minimum_consume;
+      let global_coupon_total = this.discount(
+        this.global_coupon[val],
+        this.total
+      );
+      let discount_total = this.total - this.course_coupon_total;
+      if (this.total < minimum_consume) {
+        this.default_global_coupon_id = null;
+        this.$message({
+          message: "优惠卷错误,优惠后商品不满足最低消费",
+          center: true
         });
+      } else if (global_coupon_total > discount_total) {
+        this.default_global_coupon_id = null;
+        this.$message({
+          message: "优惠卷错误,优惠后商品不能低于经过课程优惠卷后的商品总额",
+          center: true
+        });
+      } else {
+        console.log(typeof val, 1111111);
 
+        smPut(params)
+          .then(res => {
+            if ((res.code = 1000)) {
+              this.$message({
+                message: "更改通用优惠卷成功",
+                center: true
+              });
+              this.default_global_coupon_id = val;
+            } else {
+              this.$message({
+                message: res.errors,
+                center: true
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message({
+              message: "结算失败",
+              center: true
+            });
+          });
+      }
     },
     handleSelectionChange(val) {
       console.log(val);
@@ -224,6 +383,33 @@ export default {
       // let Num = this.$store.getters.userInfo.shop_cart_num;
       let num = this.tableData.length;
       this.$store.commit("updateShoppingCart", num);
+    },
+    discount(obj, price) {
+      let total = 0;
+      if (obj.money_equivalent_value) {
+        total += obj.money_equivalent_value;
+      }
+      if (obj.off_percent !== 100) {
+        total += (price * (100 - obj.off_percent)) / 100;
+      }
+      return total;
+    },
+    clearCoupon() {
+      // 清空优惠卷默认选择
+      this.tableData.forEach(row => {
+        if (parseInt(row.default_coupon_id)) {
+          delete row.default_coupon_id;
+        }
+      });
+    },
+    isChecked(val) {
+      if (val) {
+        this.balance = parseFloat(this.$store.getters.userInfo.balance);
+        // console.log(this.$store.getters.userInfo.balance)
+        // console.log(typeof(this.$store.getters.userInfo.balance))
+      } else {
+        this.balance = 0;
+      }
     }
   },
 
@@ -239,8 +425,8 @@ export default {
               // console.log(row);
               this.tableData = row;
             } else {
-              this.default_global_coupon_id = row.default_global_coupon_id
-              delete row.default_global_coupon_id
+              this.default_global_coupon_id = row.default_global_coupon_id;
+              delete row.default_global_coupon_id;
               this.global_coupon = row;
             }
           });
@@ -262,70 +448,80 @@ export default {
       let total_money = 0;
       this.tableData.forEach(row => {
         let money = row.price;
-        money = parseInt(money);
+        money = parseFloat(money);
         total_money += money;
       });
-      console.log(total_money);
       return total_money;
     },
     couponTotal: function() {
       return (
-        parseInt(this.course_coupon_total) + parseInt(this.global_coupon_total)
+        parseFloat(this.course_coupon_total) +
+        parseFloat(this.global_coupon_total)
       );
     },
     actualTotal: function() {
-      return this.total - this.couponTotal;
-    },
-    course_coupon_total:function(){
-      if (!this.tableData) {
-        return 0
+      if (this.total < this.couponTotal) {
+        this.clearCoupon();
+        return this.total;
       } else {
-        let total = 0
-        this.tableData.forEach(
-          row=>{
-            if (row.default_coupon_id) {
-              let money=row.course_coupon_dic[row.default_coupon_id].money_equivalent_value;
-              money = parseInt(money);
-              total+=money
-            } 
-            
+        if (parseFloat(this.balance)) {
+          let discount = this.total - this.couponTotal;
+          if (parseFloat(this.balance) > discount) {
+            this.useBalance = discount;
+            return 0;
+          } else {
+            this.useBalance = this.balance;
+            return discount - parseFloat(this.balance);
           }
-        )
-        return total
+        } else {
+          return this.total - this.couponTotal;
+        }
       }
     },
-    global_coupon_total:function(){
-      let total = 0
-      if(this.default_global_coupon_id){
-        total = this.global_coupon[this.default_global_coupon_id].money_equivalent_value
+    course_coupon_total: function() {
+      if (!this.tableData) {
+        return 0;
+      } else {
+        let total = 0;
+        this.tableData.forEach(row => {
+          if (parseInt(row.default_coupon_id)) {
+            let couponPrice = parseFloat(row.price);
+            let minimum_consume =
+              row.course_coupon_dic[row.default_coupon_id].minimum_consume;
+            let money = this.discount(
+              row.course_coupon_dic[row.default_coupon_id],
+              couponPrice
+            );
+            if (minimum_consume > couponPrice || money > couponPrice) {
+              let index = this.tableData.indexOf(row);
+              this.tableData[index].default_coupon_id = null;
+            } else {
+              total += money;
+            }
+          }
+        });
+        return total;
       }
-      return parseInt(total)
+    },
+    global_coupon_total: function() {
+      if (parseInt(this.default_global_coupon_id)) {
+        let minimum_consume = this.global_coupon[this.default_global_coupon_id]
+          .minimum_consume;
+        let money = this.discount(
+          this.global_coupon[this.default_global_coupon_id],
+          this.total - this.course_coupon_total
+        );
+        let discount_total = this.total - this.course_coupon_total;
+        if (minimum_consume > discount_total || money > discount_total) {
+          this.default_global_coupon_id = null;
+        } else {
+          return money;
+        }
+      }
+
+      return 0;
     }
   }
-  // beforeCreate() {
-  //   let condition = this.$route.params;
-  //   // let uid = this.$store.getters.userInfo.id
-  //   console.log(condition);
-  //   console.log(condition.length === 0, 1111);
-  //   if (JSON.stringify(condition) !== "{}") {
-  //     let obj = {
-  //       course_id: condition.cid,
-  //       price_policy_id: condition.pid
-  //     };
-
-  //     scPost(obj)
-  //       .then(res => {
-  //         console.log(res);
-  //       })
-  //       .catch(err => {
-  //         console.log(err);
-  //         this.$message({
-  //           message: "加入购物车失败,请重新加入",
-  //           center: true
-  //         });
-  //       });
-  //   }
-  // }
 };
 </script>
 

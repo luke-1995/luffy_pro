@@ -16,7 +16,8 @@ router.beforeEach((to, from, next) => {
         let username = localStorage.getItem('username')
         let shop_cart_num = localStorage.getItem('shop_cart_num')
         let id = localStorage.getItem('id')
-        let user = {id: id, username: username, shop_cart_num: shop_cart_num}
+        let balance = localStorage.getItem('balance')
+        let user = {id: id, username: username, shop_cart_num: shop_cart_num,balance:balance}
         store.dispatch('updateUserinfo', user)
         next()
       }

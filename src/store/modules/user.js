@@ -28,6 +28,7 @@ const user = {
             localStorage.setItem('username', res.data.user.username)
             localStorage.setItem('id', res.data.user.id)
             localStorage.setItem('shop_cart_num', res.data.user.shop_cart_num)
+            localStorage.setItem('balance', res.data.user.balance)
             commit('updateUserinfo', res.data.user)
           }
 

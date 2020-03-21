@@ -142,12 +142,16 @@ export default {
         balance: this.useBalance,
         total_price: this.actualTotal
       };
+      console.log(this.useBalance)
       pPost(params)
         .then(res => {
           console.log(res);
           if (res.code === 1000) {
             if (!this.actualTotal) {
-              // this.freePayment();
+              // 更新贝里
+              this.$router.push({
+                name: "order",
+              });
             } else {
               this.$router.push({
                 name: "payment",

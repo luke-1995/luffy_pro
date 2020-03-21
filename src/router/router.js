@@ -62,7 +62,19 @@ export const constantRouterMap = [
         path: '/order',
         name: 'order',
         component: () => import('@/views/order/order')
-      }
+      },
+      {
+        path: '/classroom',
+        name: 'classroom',
+        component: () => import('@/views/classroom/index')
+      },
+      {
+        path: '/homework/:cid',
+        name: 'homework',
+        component: () => import('@/views/homework/index')
+      },
+
+
     ]
   },
   {
@@ -90,7 +102,6 @@ export const constantRouterMap = [
   {
     path: '/homework/correction',
     component: () => import('@/views/homework/correction')
-
   },
   {
     path: '/article',

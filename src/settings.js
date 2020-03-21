@@ -6,7 +6,7 @@ module.exports = {
   /**
       * @description 超时时间
       */
-  timeout: 3000,
+  timeout: 5000,
   /**
       * @description 媒体文件的前缀
       */

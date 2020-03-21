@@ -46,7 +46,7 @@
         <el-table :data="order_detail_info" style="width: 100%">
           <el-table-column prop="title" label="课程名称" width="180"></el-table-column>
           <el-table-column prop="original_price" label="原价(元)" width="180"></el-table-column>
-          <el-table-column prop="price" label="折后价(元)" width="180"></el-table-column>
+          <el-table-column prop="price" label="课程优惠卷折后价(元)" width="180"></el-table-column>
           <el-table-column prop="valid_period_display" label="有效期"></el-table-column>
         </el-table>
       </el-dialog>

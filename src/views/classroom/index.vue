@@ -9,7 +9,9 @@
               <el-button>
               <router-link :to="{name:'homework',params:{cid:chapter.id}}">作业</router-link>
               </el-button> 
-              <el-button>教学视频</el-button>
+              <el-button>
+                <router-link :to="{name:'video',params:{cid:chapter.id}}">教学视频</router-link>
+              </el-button>
               
             </el-collapse-item>
           </el-collapse>

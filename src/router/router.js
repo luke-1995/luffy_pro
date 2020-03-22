@@ -73,6 +73,11 @@ export const constantRouterMap = [
         name: 'homework',
         component: () => import('@/views/homework/index')
       },
+      {
+        path: '/vide/:cid',
+        name: 'video',
+        component: () => import('@/views/video/index')
+      },
 
 
     ]

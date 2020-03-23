@@ -12,6 +12,9 @@ import '../static/plugins/font-awesome/css/font-awesome.css'
 import '../static/css/nav.css'
 import '../static/rbac/css/rbac.css'
 import Vue2Editor from 'vue2-editor'
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
 
 Vue.use(Vue2Editor)
 

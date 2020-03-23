@@ -2,9 +2,15 @@
   <Layout>
     <template #content>
       <div class="luffy-container">
-        <div class="container">
+        <div class="col-md-6 ">
+          <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+        </div>
+        <div class="col-md-6">
+          <div id="orderChart" :style="{width: '300px', height: '300px'}"></div>
+        </div>
+        <!-- <div class="container">
           <div class="btn-group" style="margin: 5px 0">
-            <el-button size="mini" @click="add">添加文章</el-button>
+            <el-button size="mini" @click="add">添加角色</el-button>
           </div>
           <el-table :data="tableData" style="width: 80%" justify="center">
             <el-table-column label="id" width="180">
@@ -12,7 +18,7 @@
                 <span style="margin-left: 10px">{{ scope.row.id }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="文章名称" width="180">
+            <el-table-column label="角色名称" width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.title }}</span>
               </template>
@@ -28,16 +34,16 @@
               </template>
             </el-table-column>
           </el-table>
-        </div>
+        </div> -->
       </div>
-      <el-dialog title="文章增加表" :visible.sync="isadd">
+      <el-dialog title="角色增加表" :visible.sync="isadd">
         <el-form :model="addform" ref="addform" class="demo-dynamic">
           <el-form-item
-            label="文章"
+            label="角色"
             prop="title"
             :label-width="formLabelWidth"
             :rules="[
-                  { required: true, message: '请输入文章名', trigger: 'blur' }
+                  { required: true, message: '请输入角色名', trigger: 'blur' }
                 ]"
           >
             <el-input v-model="addform.title" autocomplete="off"></el-input>
@@ -50,14 +56,14 @@
         </div>
       </el-dialog>
 
-      <el-dialog title="文章更新表" :visible.sync="isedit">
+      <el-dialog title="角色更新表" :visible.sync="isedit">
         <el-form :model="editform" ref="editform" class="demo-dynamic">
           <el-form-item
-            label="文章"
+            label="角色"
             prop="title"
             :label-width="formLabelWidth"
             :rules="[
-                  { required: true, message: '请输入文章名', trigger: 'blur' }
+                  { required: true, message: '请输入角色名', trigger: 'blur' }
                 ]"
           >
             <el-input v-model="editform.title" autocomplete="off"></el-input>
@@ -74,12 +80,12 @@
 
 <script>
 import Layout from '@/layout/rbac'
-import { aList,aDel } from '@/api/article'
+import { rfGet } from '@/api/report_forms'
 
 export default {
   data () {
     return {
-      tableData: [{id: 0, title: 'title'}],
+      tableData: [],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,
@@ -90,12 +96,62 @@ export default {
       editform: {
         title: ''
       },
-      formLabelWidth: '100px'
+      formLabelWidth: '100px',
     }
   },
+  mounted(){
+    rfGet()
+      .then(res => {
+        if (res.code=1000) {
+          this.tableData = res.data
+        console.log(res)
+        this.drawLine();
+        }
+        
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    
+  },
   methods: {
+     drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        let orderChart = this.$echarts.init(document.getElementById('orderChart'))
+        // 绘制图表
+        myChart.setOption({
+            title: { text: '用户注册趋势图' },
+            tooltip: {},
+            xAxis: {
+                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                data: this.tableData.register.x
+            },
+            yAxis: {},
+            series: [{
+                name: '注册量',
+                type: 'bar',
+                data: this.tableData.register.y
+            }]
+        });
+        orderChart.setOption({
+            title: { text: '订单量报表' },
+            tooltip: {},
+            xAxis: {
+                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                data: this.tableData.order.x
+            },
+            yAxis: {},
+            series: [{
+                name: '订单量',
+                type: 'bar',
+                data: this.tableData.order.y
+            }]
+        });
+    },
+    
     add () {
-      this.$router.push({name: 'article_add'})
+      this.isadd = true
     },
     addData () {
       rolePost(this.addform)
@@ -134,11 +190,11 @@ export default {
     },
 
     edit (row) {
-      
-      this.$router.push({name: 'article_edit', params: {id:row.id}})
+      this.editform = row
+      this.isedit = true
     },
     del (row) {
-      aDel(row.id)
+      roleDel(row.id)
         .then(res => {
           if (!res) {
             this.delFun(row)
@@ -155,14 +211,7 @@ export default {
     }
   },
   created () {
-    aList()
-      .then(res => {
-        this.tableData = res
-        console.log(res)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    
   },
   components: {
     Layout

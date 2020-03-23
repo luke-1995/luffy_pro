@@ -4,7 +4,7 @@
       <div class="luffy-container">
         <div class="container">
           <div class="btn-group" style="margin: 5px 0">
-            <el-button size="mini" @click="add">添加角色</el-button>
+            <el-button size="mini" @click="add">添加课程</el-button>
           </div>
           <el-table :data="tableData" style="width: 80%" justify="center">
             <el-table-column label="id" width="180">
@@ -12,7 +12,7 @@
                 <span style="margin-left: 10px">{{ scope.row.id }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="角色名称" width="180">
+            <el-table-column label="课程名称" width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.title }}</span>
               </template>
@@ -30,14 +30,14 @@
           </el-table>
         </div>
       </div>
-      <el-dialog title="角色增加表" :visible.sync="isadd">
+      <el-dialog title="课程增加表" :visible.sync="isadd">
         <el-form :model="addform" ref="addform" class="demo-dynamic">
           <el-form-item
-            label="角色"
+            label="课程"
             prop="title"
             :label-width="formLabelWidth"
             :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
+                  { required: true, message: '请输入课程名', trigger: 'blur' }
                 ]"
           >
             <el-input v-model="addform.title" autocomplete="off"></el-input>
@@ -50,14 +50,14 @@
         </div>
       </el-dialog>
 
-      <el-dialog title="角色更新表" :visible.sync="isedit">
+      <el-dialog title="课程更新表" :visible.sync="isedit">
         <el-form :model="editform" ref="editform" class="demo-dynamic">
           <el-form-item
-            label="角色"
+            label="课程"
             prop="title"
             :label-width="formLabelWidth"
             :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
+                  { required: true, message: '请输入课程名', trigger: 'blur' }
                 ]"
           >
             <el-input v-model="editform.title" autocomplete="off"></el-input>
@@ -79,7 +79,7 @@ import { roleGet, rolePost, rolePatch, roleDel } from '@/api/role'
 export default {
   data () {
     return {
-      tableData: [],
+      tableData: [{id:1,title:"title"}],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,

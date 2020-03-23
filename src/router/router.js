@@ -110,13 +110,20 @@ export const constantRouterMap = [
   },
   {
     path: '/article',
+    name:'article',
     component: () => import('@/views/article/index')
 
   },
   {
-    path: '/article/change',
-    component: () => import('@/views/article/change'),
-    name: 'article_change'
+    path: '/article/edit/:id',
+    component: () => import('@/views/article/edit'),
+    name: 'article_edit'
+
+  },
+  {
+    path: '/article/add',
+    component: () => import('@/views/article/add'),
+    name: 'article_add'
 
   },
   {
@@ -131,13 +138,18 @@ export const constantRouterMap = [
   // },
 
   {
-    path: '/order',
+    path: '/order_menu',
     component: () => import('@/views/order/index')
 
   },
   {
     path: '/distribution',
     component: () => import('@/views/distribution/index')
+
+  },
+  {
+    path: '/report_forms',
+    component: () => import('@/views/report_forms/index')
 
   }
   // {

@@ -41,8 +41,8 @@
                        购物车<span class="count">({{userInfo.shop_cart_num}})</span>
                         <i>></i>
                       </li>
-                      <li>
-                       退出
+                      <li @click="logout">
+                       注销
                         <i>></i>
                       </li>
                   </ul>
@@ -63,8 +63,8 @@
 
 <script>
 var HeaderList = [
-  {id: 1, name: 'home', title: '首页'},
-  {id: 2, name: 'course', title: '课程'}
+  {id: 1, name: 'home', title: '首页'}
+  // {id: 2, name: 'course', title: '课程'}
   // {id: 3, name: 'LightCourse', title: '轻课'},
   // {id: 4, name: 'Micro', title: '学位课'}
 ]
@@ -91,6 +91,11 @@ export default {
     },
     leaveHandler () {
       this.isShow = false
+    },
+    logout(){
+      this.$store.dispatch('Logout').then(
+        ()=>{this.$router.push({name:'login'})}
+      )
     }
 
   },

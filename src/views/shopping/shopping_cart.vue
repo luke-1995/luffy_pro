@@ -63,160 +63,161 @@
 </template>
 
 <script>
-import { scGet, scPost, scPut, scDel } from "@/api/shopping_cart";
-import { smPost } from "@/api/settlement";
-import Config from "@/settings";
+import { scGet, scPost, scPut, scDel } from '@/api/shopping_cart'
+import { smPost } from '@/api/settlement'
+import Config from '@/settings'
 export default {
-  name: "ShopCart",
-  data() {
+  name: 'ShopCart',
+  data () {
     return {
       tableData: [],
       multipleSelection: [],
       pre_url: Config.pre_url,
       kk: 1
-    };
+    }
   },
   filters: {
-    toStr: function(value) {
-      value = value.toString();
-      return value;
+    toStr: function (value) {
+      value = value.toString()
+      return value
     }
   },
   methods: {
-    buy() {
-      console.log(this.multipleSelection, typeof this.multipleSelection);
-      let flag = false;
+    buy () {
+      // console.log(this.multipleSelection, typeof this.multipleSelection)
+      let flag = false
       if (this.multipleSelection.length !== 0) {
-        let course_list = this.multipleSelection.map(function(
+        let course_list = this.multipleSelection.map(function (
           element,
           index,
           array
         ) {
-          return element.course_id;
-        });
-        smPost({course_list:course_list})
+          return element.course_id
+        })
+        console.log(course_list,3333)
+        smPost({course_list: course_list})
           .then(res => {
             if (res.code === 1000) {
-              this.$router.push({name:'settlement'});
+              this.$router.push({name: 'settlement'})
             } else {
               this.$message({
                 message: res.errors,
                 center: true
-              });
+              })
             }
           })
           .catch(err => {
-            console.log(err);
+            console.log(err)
             this.$message({
-              message: "结算失败,请重新结算",
+              message: '结算失败,请重新结算',
               center: true
-            });
-          });
+            })
+          })
       } else {
         this.$message({
-          message: "请选择商品",
+          message: '请选择商品',
           center: true
-        });
+        })
       }
     },
-    toggleSelection(rows) {
+    toggleSelection (rows) {
       if (rows) {
         rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
       } else {
-        this.$refs.multipleTable.clearSelection();
+        this.$refs.multipleTable.clearSelection()
       }
     },
-    selectPriceChange(val, row) {
+    selectPriceChange (val, row) {
       let params = {
         course_id: row.course_id,
         price_policy_id: val
-      };
+      }
       scPut(params)
         .then(res => {
           if ((res.code = 1000)) {
             this.$message({
-              message: "购物车更新成功",
+              message: '购物车更新成功',
               center: true
-            });
+            })
           } else {
             this.$message({
               message: res.errors,
               center: true
-            });
+            })
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
           this.$message({
-            message: "移除购物车失败",
+            message: '移除购物车失败',
             center: true
-          });
-        });
+          })
+        })
     },
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       // console.log(val);
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
-    del(row) {
+    del (row) {
       let params = {
         course_list: new Array(row.course_id)
-      };
+      }
       scDel(params)
         .then(res => {
           if (!res.data) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
           this.$message({
-            message: "移除购物车失败",
+            message: '移除购物车失败',
             center: true
-          });
-        });
+          })
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
       this.$message({
-        message: "移除购物车成功",
+        message: '移除购物车成功',
         center: true
-      });
+      })
       // let Num = this.$store.getters.userInfo.shop_cart_num;
-      let num = this.tableData.length;
-      this.$store.commit("updateShoppingCart", num);
+      let num = this.tableData.length
+      this.$store.commit('updateShoppingCart', num)
     }
   },
-  created() {
+  created () {
     scGet()
       .then(res => {
         if (res.code === 1000) {
-          this.tableData = res.data;
-          console.log(res.data);
+          this.tableData = res.data
+          console.log(res.data)
         } else {
           this.$message({
             message: res.errors,
             center: true
-          });
+          })
         }
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   },
   computed: {
-    total: function() {
-      let total_money = 0;
+    total: function () {
+      let total_money = 0
       this.multipleSelection.forEach(row => {
-        let money = row.price_policy_dic[row.price_policy_default_id].price;
-        money = parseInt(money);
-        total_money += money;
-      });
-      console.log(total_money);
-      return total_money;
+        let money = row.price_policy_dic[row.price_policy_default_id].price
+        money = parseInt(money)
+        total_money += money
+      })
+      console.log(total_money)
+      return total_money
     }
   }
   // beforeCreate() {
@@ -243,7 +244,7 @@ export default {
   //       });
   //   }
   // }
-};
+}
 </script>
 
 <style lang="css" scoped>

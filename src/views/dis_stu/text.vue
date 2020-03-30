@@ -62,6 +62,7 @@
 
 <script>
 import Layout from '@/layout/rbac'
+import {dsGet} from '@/api/dis_stu'
 
 export default {
   name: 'Role',
@@ -271,35 +272,10 @@ export default {
     }
   },
   created () {
-    // this.$http
-    //   .user()
-    //   .then(res => {
-    //     console.log(res);
-
-    //     if (res.data) {
-    //       console.log(res);
-    //       this.firstTableDate = res.data;
-    //       // this.tableData=res.data.data.myShopCart
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-
-    // this.$http
-    //   .role()
-    //   .then(res => {
-    //     console.log(res);
-
-    //     if (res.data) {
-    //       console.log(res);
-    //       this.secondTableDate = res.data;
-    //       // this.tableData=res.data.data.myShopCart
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+    dsGet().then(res => {
+      this.firstTableDate = res
+      this.secondTableDate = res[0].teacher_info
+    }).catch(err => { console.log(err) })
   },
   components: {
     Layout

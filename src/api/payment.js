@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 提交支付请求(核对并生成订单)
 // export function pGet () {
 //   return request({
 //     url: 'payment/',

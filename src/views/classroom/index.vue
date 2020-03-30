@@ -8,11 +8,14 @@
             <el-collapse-item :title="chapter.title" :name="chapter.id" v-for="chapter in course.chapter_info" :key="chapter.id">
               <el-button>
               <router-link :to="{name:'homework',params:{cid:chapter.id}}">作业</router-link>
-              </el-button> 
+              </el-button>
               <el-button>
                 <router-link :to="{name:'video',params:{cid:chapter.id}}">教学视频</router-link>
               </el-button>
-              
+              <el-button @click="update(chapter.title)">
+                更新到用户的学习进度中
+              </el-button>
+
             </el-collapse-item>
           </el-collapse>
         </el-tab-pane>
@@ -22,28 +25,43 @@
 </template>
 
 <script>
-import {crGet} from '@/api/classroom'
+import {crGet, lpPatch} from '@/api/classroom'
 export default {
-  data() {
+  data () {
     return {
-        activeNames: [1],
-        tableData:[],
-    };
+      activeNames: [1],
+      tableData: []
+    }
   },
   methods: {
-      handleChange(val) {
-        console.log(val);
-      }
+    handleChange (val) {
+      console.log(val)
     },
-  created(){
-    crGet().then(
-      res=>{
-        
-        this.tableData=res
+    update (title) {
+      let params = {
+        learning_process: title
       }
-    ).catch(err=>{console.log(err)})
+      let uid = this.$store.getters.userInfo.id
+      lpPatch(uid, params).then(
+        res => {
+          this.$message({
+            message: '成功更新',
+            center: true
+          })
+        }
+      ).catch(
+        err => { console.log(err) }
+      )
+    }
+  },
+  created () {
+    crGet().then(
+      res => {
+        this.tableData = res
+      }
+    ).catch(err => { console.log(err) })
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

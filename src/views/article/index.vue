@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <template #content>
+
       <div class="luffy-container">
         <div class="container">
           <div class="btn-group" style="margin: 5px 0">
@@ -30,51 +29,14 @@
           </el-table>
         </div>
       </div>
-      <el-dialog title="文章增加表" :visible.sync="isadd">
-        <el-form :model="addform" ref="addform" class="demo-dynamic">
-          <el-form-item
-            label="文章"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入文章名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="addform.title" autocomplete="off"></el-input>
-            <span class="pull-right" style="color:#F56C6C;">{{addError}}</span>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isadd = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
-        </div>
-      </el-dialog>
 
-      <el-dialog title="文章更新表" :visible.sync="isedit">
-        <el-form :model="editform" ref="editform" class="demo-dynamic">
-          <el-form-item
-            label="文章"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入文章名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="editform.title" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isedit = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('editform')">确 定</el-button>
-        </div>
-      </el-dialog>
-    </template>
-  </Layout>
+
+
 </template>
 
 <script>
 import Layout from '@/layout/rbac'
-import { aList,aDel } from '@/api/article'
+import { aList, aDel } from '@/api/article'
 
 export default {
   data () {
@@ -134,8 +96,7 @@ export default {
     },
 
     edit (row) {
-      
-      this.$router.push({name: 'article_edit', params: {id:row.id}})
+      this.$router.push({name: 'article_edit', params: {id: row.id}})
     },
     del (row) {
       aDel(row.id)

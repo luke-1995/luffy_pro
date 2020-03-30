@@ -60,7 +60,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 	</div>
 </template>
 
@@ -68,98 +68,94 @@
 export default {
 
   name: 'CourseDetail',
-  data(){
+  data () {
   	return {
-  		coursedetailtop:{},//课程顶部详情数据
-  		brief:'',
-  		coursedetail:{},//课程详情数据
-  		currentIndex:null,
-  		prices:[],
-		test:[],
+  		coursedetailtop: {}, // 课程顶部详情数据
+  		brief: '',
+  		coursedetail: {}, // 课程详情数据
+  		currentIndex: null,
+  		prices: [],
+      test: []
   	}
   },
-  methods:{
+  methods: {
   	// 加入购物车
-  	addShopCart(){
-  		console.log(this.currentIndex);
+  	addShopCart () {
+  		console.log(this.currentIndex)
   		if (this.prices[this.currentIndex]) {
-  			
   			if (window.localStorage.getItem('access_token')) {
   				//  用户要买东西
   				let course = {
   					courseId: this.$route.params.detailId,
-  					validPeriodId:this.prices[this.currentIndex].valid_period
+  					validPeriodId: this.prices[this.currentIndex].valid_period
   				}
   				this.$http.shopCart(course)
-  				.then(res=>{
+  				.then(res => {
   					if (res.error_no === 0) {
-  						this.$message('购物车'+res.data.status);
+  						this.$message('购物车' + res.data.status)
   					}
 
   					if (res.error_no === 10) {
-
-  						this.$message(res.msg);
+  						this.$message(res.msg)
   					}
   				})
-  				.catch(err=>{
-  					console.log(err);
+  				.catch(err => {
+  					console.log(err)
   				})
-  			}else{
-
-  				// 跳转登录页面	
+  			} else {
+  				// 跳转登录页面
   				// 使用编程式导航来跳转
   				this.$router.push({
-  					name:'Login',
-  					query:{
-  						return_url:window.location.href
+  					name: 'Login',
+  					query: {
+  						return_url: window.location.href
   					}
   				})
-
   			}
-  		}else{
+  		} else {
   			// alert(1);
   			 this.$message({
-  			 	message:'您没有要选择加入的套餐哦！',
-  			 	center:true
-  			 });
+  			 	message: '您没有要选择加入的套餐哦！',
+  			 	center: true
+  			 })
   		}
   	},
   	// 套餐选中操作
-  	priceClick(index){
-  		this.currentIndex = index;
+  	priceClick (index) {
+  		this.currentIndex = index
   	},
-  	getCoursedetailtop(){
+  	getCoursedetailtop () {
   		this.$http.coursedetailtop(this.$route.params.detailId)
-  		.then(res=>{
-  			console.log(res);
+  		.then(res => {
+  			console.log(res)
   			if (!res.error_no) {
   				this.coursedetailtop = res.data
   			}
   		})
-  		.catch(err=>{
-  			console.log(err);
+  		.catch(err => {
+  			console.log(err)
   		})
   	},
-  	getCourseDetail(){
+  	getCourseDetail () {
   		this.$http.coursedetail(this.$route.params.detailId)
-  		.then(res=>{
-  			console.log('======',res);
+  		.then(res => {
+  			console.log('======', res)
   			// this.brief = res.data.brief;
-  			this.coursedetail = res.data;
+  			this.coursedetail = res.data
   			this.prices = res.data.prices
   		})
-  		.catch(err=>{
-  			console.log(err);
+  		.catch(err => {
+  			console.log(err)
   		})
   	}
-  	
+
   },
-  created(){
+  created () {
   	// this.getCoursedetailtop();
   	// this.getCourseDetail();
-  	
+
   }
-};
+}
 </script>
 
 <style lang="css" scoped>
@@ -288,7 +284,7 @@ height: 80px;
 	    letter-spacing: 1.57px;
 	    display: inline-block;
 	    margin-top: 102px
-} 
+}
 .course-price ul{
 	/*width: 800px;*/
 	margin: 50px auto;
@@ -353,5 +349,4 @@ height: 80px;
 	background: #f5a623 url() no-repeat 125px 15px!important;
 }
 
-    
 </style>

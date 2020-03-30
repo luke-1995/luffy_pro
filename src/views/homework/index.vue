@@ -57,25 +57,24 @@
           </template>
         </el-table-column>
       </el-table>
-                <el-dialog title="评价表" :visible.sync="isadd">
-            <el-form :model="addform" ref="addform" class="demo-dynamic">
-              <el-form-item
-                label="内容"
-                prop="comment"
-                :label-width="formLabelWidth"
-                :rules="[
+      <el-dialog title="评价表" :visible.sync="isadd">
+        <el-form :model="addform" ref="addform" class="demo-dynamic">
+          <el-form-item
+            label="内容"
+            prop="comment"
+            :label-width="formLabelWidth"
+            :rules="[
                   { required: true, message: '请输入内容', trigger: 'blur' }
                 ]"
-              >
-                <el-input v-model="addform.comment" autocomplete="off" type="textarea"></el-input>
-                <span class="pull-right" style="color:#F56C6C;">{{addError}}</span>
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="isadd = false">取 消</el-button>
-              <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
-            </div>
-          </el-dialog>
+          >
+            <el-input v-model="addform.comment" autocomplete="off" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="isadd = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
+        </div>
+      </el-dialog>
       <el-dialog title="上传作业" :visible.sync="isedit">
         <div class="uploadBox">
           <h3>上传文件</h3>
@@ -115,7 +114,7 @@
 </template>
 
 <script>
-import { hwGet,hwPut } from "@/api/homework";
+import { hwGet, hwPut, filePost } from "@/api/homework";
 import { dhGet } from "@/api/media";
 import Config from "@/settings";
 import axios from "axios";
@@ -126,11 +125,11 @@ export default {
       tableData: [],
       editform: {},
       addform: {},
-      addError: '',
+      addError: "",
       isedit: false,
       isadd: false,
       files: [],
-      formLabelWidth:'100px'
+      formLabelWidth: "100px"
     };
   },
   created() {
@@ -151,37 +150,37 @@ export default {
       // this.tableData[index].homework_record.file = 1;
       this.isedit = true;
     },
-    add(row){
-      this.isadd=true;
-      this.addform=row;
+    add(row) {
+      this.isadd = true;
+      this.addform = row;
     },
-    addData () {
-      let id = this.addform.id
-      hwPut(id,this.addform)
+    addData() {
+      let id = this.addform.id;
+      hwPut(id, this.addform)
         .then(res => {
-          alert('submit!')
-          console.log(res)
+          alert("submit!");
+          console.log(res);
           let index = this.tableData.indexOf(this.addform);
-          this.tableData[index].homework_record.comment = res.comment
+          this.tableData[index].homework_record.comment = res.comment;
           // this.tableData.push(res)
-          this.isadd = false
+          this.isadd = false;
         })
         .catch(error => {
-          console.log(error)
-          this.addError = error
-        })
+          console.log(error);
+          this.addError = error;
+        });
     },
-    submitForm (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === 'addform') {
-            this.addData()
-          } 
+          if (formName === "addform") {
+            this.addData();
+          }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     downloadItem(file) {
       let url = Config.pre_url + file;
@@ -228,7 +227,6 @@ export default {
         //   param.append(key,editform[key])
         // }
         let id = this.editform.homework_record.id;
-        console.log(id);
         console.log(param.get("file"));
         if (this.files.length > 1) {
           item.uploadStatus = -4;
@@ -258,24 +256,43 @@ export default {
             item.uploadPercentage = completeProgress;
           }
         };
-        axios
-          .post(`http://127.0.0.1:8000/homework_file/${id}/`, param, config)
+        // axios
+        //   .post(`http://127.0.0.1:8000/homework_file/${id}/`, param, config)
+        //   .then(res => {
+        //     console.log(res)
+        //     if (res.data.code === 1000) {
+        //       let index = this.tableData.indexOf(this.editform)
+        //       this.tableData[index].homework_record.file = res.data.data.file
+        //       this.tableData[index].homework_record.homework_status = res.data.data.homework_status
+
+        //       item.uploadStatus = 2
+        //     } else if (res.data.code === 1060) {
+        //       item.uploadStatus = -5
+        //     } else {
+        //       item.uploadStatus = -1
+        //     }
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //     item.uploadStatus = -1
+        //   })
+        filePost(id, param, config)
           .then(res => {
             console.log(res);
-            if (res.data.code === 1000) {
+            if (res.code === 1000) {
               let index = this.tableData.indexOf(this.editform);
-              this.tableData[index].homework_record.file = res.data.data.file;
-              this.tableData[index].homework_record.homework_status = res.data.data.homework_status;
-
+              this.tableData[index].homework_record.file = res.data.file;
+              this.tableData[index].homework_record.homework_status =
+                res.data.homework_status;
               item.uploadStatus = 2;
-            } else if (res.data.code === 1060) {
+            } else if (res.code === 1010) {
               item.uploadStatus = -5;
             } else {
               item.uploadStatus = -1;
             }
           })
-          .catch(error => {
-            console.log(error);
+          .catch(err => {
+            console.log(err);
             item.uploadStatus = -1;
           });
       }

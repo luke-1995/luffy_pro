@@ -58,64 +58,64 @@
 </template>
 
 <script>
-import { orderGet } from "@/api/order";
+import { orderGet } from '@/api/order'
 export default {
-  data() {
+  data () {
     return {
       tableData: [],
       formLabelWidth: 100,
       isList: false,
       order_detail_info: []
-    };
-  },
-  filters: {
-    toMoney: function(value) {
-      if (value) {
-        value = "¥ " + value;
-      }
-      return value;
-    },
-    toDate: function(value) {
-      if (value) {
-        let time = new Date(value);
-        return time.toLocaleDateString();
-      }
-      return value;
     }
   },
-  created() {
+  filters: {
+    toMoney: function (value) {
+      if (value) {
+        value = '¥ ' + value
+      }
+      return value
+    },
+    toDate: function (value) {
+      if (value) {
+        let time = new Date(value)
+        return time.toLocaleDateString()
+      }
+      return value
+    }
+  },
+  created () {
     orderGet()
       .then(res => {
-        this.tableData = res;
+        this.tableData = res
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   },
   methods: {
-    handleList(row) {
-      (this.isList = true), console.log(row);
-      this.order_detail_info = row.order_detail_info;
+    handleList (row) {
+      (this.isList = true), console.log(row)
+      this.order_detail_info = row.order_detail_info
     },
-    operation(row) {
-      if (row.status === "待支付") {
-        return "去付款";
+    operation (row) {
+      if (row.status === '待支付') {
+        return '去付款'
       } else {
-        return "去学习";
+        return '去学习'
       }
     },
-    handleOpera(row) {
-      if (row.status === "待支付") {
+    handleOpera (row) {
+      if (row.status === '待支付') {
         return this.$router.push({
-          name: "payment",
-          params: { actualTotal: row.actual_amount,orderId: row.id }
-        });
+          name: 'payment',
+          params: { actualTotal: row.actual_amount, orderId: row.id }
+        })
       } else {
-        return this.$router.push({ name: "home" });
+        return this.$router.push({ name: 'home' })
       }
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

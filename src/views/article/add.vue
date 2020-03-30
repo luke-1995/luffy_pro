@@ -25,44 +25,44 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { aPost } from "@/api/article";
+import Layout from '@/layout/rbac'
+import { aPost } from '@/api/article'
 export default {
-  data() {
+  data () {
     return {
-      content: "",
+      content: '',
       loading: false,
       customToolbar: [
-        ["bold", "italic", "underline"],
-        [{ list: "ordered" }, { list: "bullet" }]
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }]
       ], // 更多工具栏选项在下面
       addData: {}
-    };
+    }
   },
   components: {
     Layout
   },
-  created() {
-    console.log(this.$route.params);
+  created () {
+    console.log(this.$route.params)
   },
   methods: {
-    submit() {
-      console.log(this.addData);
+    submit () {
+      console.log(this.addData)
       if (!this.addData.title) {
         this.$message({
-            message: "标题不能为空",
-            center: true
-          });
+          message: '标题不能为空',
+          center: true
+        })
       }
-      let uid = this.$store.getters.userInfo.id;
+      let uid = this.$store.getters.userInfo.id
       this.addData.user = uid
-      aPost(this.addData).then(res=>{
+      aPost(this.addData).then(res => {
         alert('submit')
-        this.$router.push({name:'article'})
-      }).catch(err=>{console.log(err)})
+        this.$router.push({name: 'article'})
+      }).catch(err => { console.log(err) })
     }
   }
-};
+}
 </script>
 
 <style>

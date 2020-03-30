@@ -85,14 +85,21 @@ export default {
     priceHandler(id) {
       this.priceId = id;
     },
-    add(obj,num) {
+    add(obj, num) {
       scPost(obj)
         .then(res => {
-          this.$message({
-            message: "加入购物车成功",
-            center: true
-          });
-          this.$store.commit('updateShoppingCart',num)
+          if (res.code === 1000) {
+            this.$message({
+              message: "加入购物车成功",
+              center: true
+            });
+            this.$store.commit("updateShoppingCart", num);
+          } else {
+            this.$message({
+              message: res.errors,
+              center: true
+            });
+          }
         })
         .catch(err => {
           console.log(err);
@@ -102,15 +109,22 @@ export default {
           });
         });
     },
-    edit(obj,num) {
+    edit(obj, num) {
       scPut(obj)
         .then(res => {
-          this.$message({
-            message: "更新购物车成功",
-            center: true
-          });
-          
-          this.$store.commit('updateShoppingCart',num)
+          if (res.code === 1000) {
+            this.$message({
+              message: "更新购物车成功",
+              center: true
+            });
+
+            this.$store.commit("updateShoppingCart", num);
+          } else {
+            this.$message({
+              message: res.errors,
+              center: true
+            });
+          }
         })
         .catch(err => {
           console.log(err);
@@ -141,29 +155,28 @@ export default {
                 if (Num && num) {
                   let flag = false;
                   res.data.forEach(row => {
-                    if (this.courseDetail.course.id==row.course_id) {
-                      flag=true
+                    if (this.courseDetail.course.id == row.course_id) {
+                      flag = true;
                     }
                   });
                   if (flag) {
-                    this.edit(obj,num);
+                    this.edit(obj, num);
                   } else {
-                    let updateNum=num+1;
-                    this.add(obj,updateNum);
+                    let updateNum = num + 1;
+                    this.add(obj, updateNum);
                   }
-                
-                } else{
-                  let updateNum=num+1;
-                  this.add(obj,updateNum);
+                } else {
+                  let updateNum = num + 1;
+                  this.add(obj, updateNum);
                 }
               }
             })
             .catch(err => {
               console.log(err);
               this.$message({
-                    message: "加入购物车失败,请重新操作",
-                    center: true
-                  });
+                message: "加入购物车失败,请重新操作",
+                center: true
+              });
             });
         } else {
           // 没有登录就跳转到登录页面

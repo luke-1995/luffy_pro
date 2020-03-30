@@ -1,22 +1,20 @@
 import request from '@/utils/request'
-
-export function aList() {
+// 文章
+export function aList () {
   return request({
     url: 'article/',
     method: 'get'
   })
 }
 
-export function aRet(id) {
+export function aRet (id) {
   return request({
     url: `article/${id}/`,
     method: 'get'
   })
 }
 
-
-
-export function aPost(params) {
+export function aPost (params) {
   return request({
     url: 'article/',
     method: 'post',
@@ -24,7 +22,7 @@ export function aPost(params) {
   })
 }
 
-export function aPatch(params) {
+export function aPatch (params) {
   return request({
     url: `article/${params.id}/`,
     method: 'patch',

@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <template #content>
+
       <div class="luffy-container">
         <div class="container">
           <div style="margin: 5px 0" class="clearfix">
@@ -74,8 +73,7 @@
           </el-dialog>
         </div>
       </div>
-    </template>
-  </Layout>
+
 </template>
 
 <script>

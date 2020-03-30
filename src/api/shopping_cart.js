@@ -1,9 +1,9 @@
 import request from '@/utils/request'
-
+// 购物车
 export function scGet () {
   return request({
     url: 'shopping_cart/',
-    method: 'get'
+    method: 'get',
   })
 }
 
@@ -27,6 +27,6 @@ export function scDel (params) {
   return request({
     url: 'shopping_cart/',
     method: 'delete',
-    data: params,
+    data: params
   })
 }

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 跟进 学生记录
 export function srGet (id) {
   return request({
     url: `student_record_list/${id}/`,

@@ -22,46 +22,46 @@
 // 模拟第三方支付页面
 import {orderPut} from '@/api/order'
 export default {
-  data() {
+  data () {
     return {
 
-    };
+    }
   },
-  methods:{
-      buy(){
-        // 第三方需要提供流水号,支付状态,支付金额
-        let payment_number = ''
-        for (let index = 0; index < 10; index++) {
-          let element = Math.floor(Math.random()*10);
-          payment_number+=element
-        };
-        console.log(11111,payment_number)
-        let params={
-          payment_number:payment_number,
-          status:0,
-          actual_amount:this.actualTotal,
-          order_id : this.$route.params.orderId
-        } ;
-        orderPut(params).then(
-          res=>{
-            if (res.code===1000) {
-              this.$router.push({name: "order"});
-            }else{
-              this.$message({
-                message: res.errors,
-                center: true
-              });
-            }
-          }
-        ).catch(err=>{console.log(err)})
-      },
-  },
-  computed:{
-      actualTotal:function(){
-          return this.$route.params.actualTotal
+  methods: {
+    buy () {
+      // 第三方需要提供流水号,支付状态,支付金额
+      let payment_number = ''
+      for (let index = 0; index < 10; index++) {
+        let element = Math.floor(Math.random() * 10)
+        payment_number += element
+      };
+      console.log(11111, payment_number)
+      let params = {
+        payment_number: payment_number,
+        status: 0,
+        actual_amount: this.actualTotal,
+        order_id: this.$route.params.orderId
       }
+      orderPut(params).then(
+        res => {
+          if (res.code === 1000) {
+            this.$router.push({name: 'order'})
+          } else {
+            this.$message({
+              message: res.errors,
+              center: true
+            })
+          }
+        }
+      ).catch(err => { console.log(err) })
+    }
+  },
+  computed: {
+    actualTotal: function () {
+      return this.$route.params.actualTotal
+    }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

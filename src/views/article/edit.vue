@@ -18,7 +18,7 @@
 
 <script>
 import Layout from '@/layout/rbac'
-import {aRet,aPatch} from '@/api/article'
+import {aRet, aPatch} from '@/api/article'
 export default {
   data () {
     return {
@@ -37,25 +37,24 @@ export default {
   created () {
     console.log(this.$route.params)
     let id = this.$route.params.id
-    aRet(id).then(res=>{
+    aRet(id).then(res => {
       this.editData = res
-    }).catch(err=>{console.log(err)})
-
+    }).catch(err => { console.log(err) })
   },
-  methods:{
-    submit(){
+  methods: {
+    submit () {
       if (!this.editData.title) {
         this.$message({
-            message: "标题不能为空",
-            center: true
-          });
+          message: '标题不能为空',
+          center: true
+        })
       }
       // let uid = this.$store.getters.userInfo.id;
       // this.addData.user = uid
-      aPatch(this.editData).then(res=>{
+      aPatch(this.editData).then(res => {
         alert('submit')
-        this.$router.push({name:'article'})
-      }).catch(err=>{console.log(err)})
+        this.$router.push({name: 'article'})
+      }).catch(err => { console.log(err) })
     }
   }
 }

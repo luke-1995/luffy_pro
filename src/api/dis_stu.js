@@ -7,25 +7,25 @@ export function dsGet () {
   })
 }
 
-export function rolePost (params) {
-  return request({
-    url: 'role/',
-    method: 'post',
-    data: params
-  })
-}
+// export function rolePost (params) {
+//   return request({
+//     url: 'role/',
+//     method: 'post',
+//     data: params
+//   })
+// }
 
-export function rolePatch (params) {
+export function dsPatch (params) {
   return request({
-    url: `role/${params.id}/`,
+    url: `dis_stu/${params.id}/`,
     method: 'patch',
     data: params
   })
 }
 
-export function roleDel (id) {
-  return request({
-    url: `role/${id}/`,
-    method: 'delete'
-  })
-}
+// export function roleDel (id) {
+//   return request({
+//     url: `role/${id}/`,
+//     method: 'delete'
+//   })
+// }

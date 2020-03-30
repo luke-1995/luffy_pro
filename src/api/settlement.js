@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 结算中心
 export function smGet () {
   return request({
     url: 'settlement/',

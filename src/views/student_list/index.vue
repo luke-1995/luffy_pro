@@ -1,11 +1,10 @@
 <template>
-  <Layout>
-    <template #content>
+
       <div class="luffy-container">
         <div class="container">
-          <div class="btn-group" style="margin: 5px 0">
+          <!-- <div class="btn-group" style="margin: 5px 0">
             <el-button size="mini" @click="add">添加角色</el-button>
-          </div>
+          </div> -->
           <el-table :data="tableData" style="width: 80%" justify="center">
             <el-table-column label="id" width="180">
               <template slot-scope="scope">
@@ -17,12 +16,12 @@
                 <span style="margin-left: 10px">{{ scope.row.username }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="添加学生记录" width="180">
+            <el-table-column label="学生记录" width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px"><router-link :to='{name:"student_record",params:{sid:scope.row.id}}'>学生记录</router-link></span>
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <!-- <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" type="primary " @click="edit(scope.row)">编辑</el-button>
                 <template>
@@ -31,50 +30,14 @@
                   </el-popconfirm>
                 </template>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
       </div>
-      <el-dialog title="角色增加表" :visible.sync="isadd">
-        <el-form :model="addform" ref="addform" class="demo-dynamic">
-          <el-form-item
-            label="角色"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="addform.title" autocomplete="off"></el-input>
-            <span class="pull-right" style="color:#F56C6C;">{{addError}}</span>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isadd = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
-        </div>
-      </el-dialog>
 
-      <el-dialog title="角色更新表" :visible.sync="isedit">
-        <el-form :model="editform" ref="editform" class="demo-dynamic">
-          <el-form-item
-            label="角色"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="editform.title" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isedit = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('editform')">确 定</el-button>
-        </div>
-      </el-dialog>
-    </template>
-  </Layout>
+
+
+
 </template>
 
 <script>

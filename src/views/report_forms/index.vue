@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <template #content>
+
       <div class="luffy-container">
         <div class="col-md-6 ">
           <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
@@ -36,46 +35,8 @@
           </el-table>
         </div> -->
       </div>
-      <el-dialog title="角色增加表" :visible.sync="isadd">
-        <el-form :model="addform" ref="addform" class="demo-dynamic">
-          <el-form-item
-            label="角色"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="addform.title" autocomplete="off"></el-input>
-            <span class="pull-right" style="color:#F56C6C;">{{addError}}</span>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isadd = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
-        </div>
-      </el-dialog>
 
-      <el-dialog title="角色更新表" :visible.sync="isedit">
-        <el-form :model="editform" ref="editform" class="demo-dynamic">
-          <el-form-item
-            label="角色"
-            prop="title"
-            :label-width="formLabelWidth"
-            :rules="[
-                  { required: true, message: '请输入角色名', trigger: 'blur' }
-                ]"
-          >
-            <el-input v-model="editform.title" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isedit = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('editform')">确 定</el-button>
-        </div>
-      </el-dialog>
-    </template>
-  </Layout>
+
 </template>
 
 <script>
@@ -96,60 +57,58 @@ export default {
       editform: {
         title: ''
       },
-      formLabelWidth: '100px',
+      formLabelWidth: '100px'
     }
   },
-  mounted(){
+  mounted () {
     rfGet()
       .then(res => {
-        if (res.code=1000) {
+        if (res.code = 1000) {
           this.tableData = res.data
-        console.log(res)
-        this.drawLine();
+          console.log(res)
+          this.drawLine()
         }
-        
       })
       .catch(error => {
         console.log(error)
       })
-    
   },
   methods: {
-     drawLine(){
-        // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('myChart'))
-        let orderChart = this.$echarts.init(document.getElementById('orderChart'))
-        // 绘制图表
-        myChart.setOption({
-            title: { text: '用户注册趋势图' },
-            tooltip: {},
-            xAxis: {
-                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
-                data: this.tableData.register.x
-            },
-            yAxis: {},
-            series: [{
-                name: '注册量',
-                type: 'bar',
-                data: this.tableData.register.y
-            }]
-        });
-        orderChart.setOption({
-            title: { text: '订单量报表' },
-            tooltip: {},
-            xAxis: {
-                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
-                data: this.tableData.order.x
-            },
-            yAxis: {},
-            series: [{
-                name: '订单量',
-                type: 'bar',
-                data: this.tableData.order.y
-            }]
-        });
+    drawLine () {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById('myChart'))
+      let orderChart = this.$echarts.init(document.getElementById('orderChart'))
+      // 绘制图表
+      myChart.setOption({
+        title: { text: '用户注册趋势图' },
+        tooltip: {},
+        xAxis: {
+          // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+          data: this.tableData.register.x
+        },
+        yAxis: {},
+        series: [{
+          name: '注册量',
+          type: 'bar',
+          data: this.tableData.register.y
+        }]
+      })
+      orderChart.setOption({
+        title: { text: '订单量报表' },
+        tooltip: {},
+        xAxis: {
+          // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+          data: this.tableData.order.x
+        },
+        yAxis: {},
+        series: [{
+          name: '订单量',
+          type: 'bar',
+          data: this.tableData.order.y
+        }]
+      })
     },
-    
+
     add () {
       this.isadd = true
     },
@@ -211,7 +170,7 @@ export default {
     }
   },
   created () {
-    
+
   },
   components: {
     Layout

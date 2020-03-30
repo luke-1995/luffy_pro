@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -22,171 +23,58 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/',
+    path: '/redirect',
     component: () => import('@/layout'),
-    redirect: '/home',
+    hidden: true,
     children: [
       {
-        path: 'home',
-        component: () => import('@/views/home/index'),
-        name: 'home',
-        meta: { title: '首页', icon: 'index', affix: true, noCache: true }
-      },
-      {
-        path: '/course',
-        name: 'course',
-        component: () => import('@/views/course/course.vue')
-
-      },
-      {
-        path: '/course/detail/:cid',
-        name: 'course_detail',
-        component: () => import('@/views/course/CourseDetail')
-      },
-      {
-        path: '/shopping_cart',
-        name: 'shopping_cart',
-        component: () => import('@/views/shopping/shopping_cart')
-      },
-      {
-        path: '/settlement',
-        name: 'settlement',
-        component: () => import('@/views/shopping/settlement')
-      },
-      {
-        path: '/payment/:actualTotal/:orderId',
-        name: 'payment',
-        component: () => import('@/views/shopping/payment')
-      },
-      {
-        path: '/order',
-        name: 'order',
-        component: () => import('@/views/order/order')
-      },
-      {
-        path: '/classroom',
-        name: 'classroom',
-        component: () => import('@/views/classroom/index')
-      },
-      {
-        path: '/homework/:cid',
-        name: 'homework',
-        component: () => import('@/views/homework/index')
-      },
-      {
-        path: '/vide/:cid',
-        name: 'video',
-        component: () => import('@/views/video/index')
-      },
-
-
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
     ]
   },
   {
-    path: '/role',
-    component: () => import('@/views/role/index')
-
-  },
-  {
-    path: '/student_record/:sid',
-    component: () => import('@/views/student_record/index'),
-    name: 'student_record'
-
-  },
-  {
-    path: '/student_list',
-    component: () => import('@/views/student_list/index'),
-    name: 'student_list'
-
-  },
-  {
-    path: '/student_question/answer',
-    component: () => import('@/views/student_question/answer')
-
-  },
-  {
-    path: '/homework/correction',
-    component: () => import('@/views/homework/correction')
-  },
-  {
-    path: '/article',
-    name:'article',
-    component: () => import('@/views/article/index')
-
-  },
-  {
-    path: '/article/edit/:id',
-    component: () => import('@/views/article/edit'),
-    name: 'article_edit'
-
-  },
-  {
-    path: '/article/add',
-    component: () => import('@/views/article/add'),
-    name: 'article_add'
-
-  },
-  {
-    path: '/rbac/course',
-    component: () => import('@/views/course/index')
-  },
-  // {
-  //   path: '/course',
-  //   name:'course',
-  //   component: () => import('@/views/course/course.vue')
-
-  // },
-
-  {
-    path: '/order_menu',
-    component: () => import('@/views/order/index')
-
-  },
-  {
-    path: '/distribution',
-    component: () => import('@/views/distribution/index')
-
-  },
-  {
-    path: '/report_forms',
-    component: () => import('@/views/report_forms/index')
-
+    path: '/',
+    component: () => import('@/layout'),
+    redirect: '/home',
+    hidden: true,
+    children: [
+      {
+        path: '/home',
+        component: () => import('@/views/home/index'),
+        name: 'home',
+        meta: { title: '首页', icon: 'index', affix: true, noCache: true },
+        hidden: true
+      }
+    ]
   }
-  // {
-  //   path:"/home/light-course",
-  //   name:'LightCourse',
-  //   component:LightCourse
-  // },
-  // {
-  //   path:"/micro",
-  //   name:'Micro',
-  //   component:Micro
-  // },
-  // 课程详情
-  // {
-  //   path:"/course/detail/:cid",
-  //   // name:'course.detail',
-  //   component: () => import('@/views/course/CourseDetail')
-  // },
-
-  // 购物车的页面
-  // {
-  //   path:"/purchase/shopping_cart",
-  //   name:'purchase.shop',
-  //   component:Cart
-  // }
-
-  // {
-  //   path: '/',
-  //   component: () =>import('@/layout')
-  // }
-
 ]
 
-const router = new Router({
+// const router = new Router({
+  
+// })
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
+
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap,
   linkActiveClass: 'is-active',
   mode: 'history'
 })
+
+const router = createRouter()
+
+
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+}
+
+
 
 export default router

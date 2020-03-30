@@ -137,7 +137,6 @@ export default {
     submitForm (formName) {
       console.log(formName)
       this.$refs[formName].validate(valid => {
-        console.log(formName, 1111, valid)
         if (valid) {
           console.log(formName)
           if (formName === 'loginForm') {
@@ -156,7 +155,6 @@ export default {
                 console.log('error submit!!')
               })
           } else {
-            console.log(111111)
             registerApi(this.ruleForm)
               .then(res => {
                 console.log(res)

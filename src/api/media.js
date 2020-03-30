@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 没有录入到api权限中
 export function dhGet (url) {
   return request({
     url: url,

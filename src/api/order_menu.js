@@ -1,31 +1,32 @@
 import request from '@/utils/request'
-
-export function orderGet () {
+// 订单
+export function orderGet (params) {
   return request({
     url: 'order_menu/',
-    method: 'get'
+    method: 'get',
+    params:params
   })
 }
 
 export function orderPost (params) {
-    return request({
-      url: 'order_menu/',
-      method: 'post',
-      data: params
-    })
-  }
+  return request({
+    url: 'order_menu/',
+    method: 'post',
+    data: params
+  })
+}
 
 export function orderPatch (params) {
   return request({
-    url:  `order_menu/${params.id}/`,
+    url: `order_menu/${params.id}/`,
     method: 'patch',
     data: params
   })
 }
 
 export function orderDel (id) {
-    return request({
-      url: `order_menu/${id}/`,
-      method: 'delete'
-    })
-  }
+  return request({
+    url: `order_menu/${id}/`,
+    method: 'delete'
+  })
+}

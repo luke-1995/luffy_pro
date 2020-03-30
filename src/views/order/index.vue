@@ -1,191 +1,193 @@
 <template>
-  <Layout>
-    <template #content>
-      <div class="luffy-container">
-        <div class="container">
-          <div class="btn-group" style="margin: 5px 0">
-            <el-button size="mini" @click="add">添加订单</el-button>
-          </div>
-          <el-table :data="tableData" style="width: 80%" justify="center">
-            <el-table-column label="id" width="180">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.id }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="订单号" width="180">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.order_number }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button size="mini" type="primary " @click="edit(scope.row)">编辑</el-button>
-                <template>
-                  <el-popconfirm title="确定删除吗？" @onConfirm="del(scope.row)">
-                    <el-button slot="reference" type="danger" size="mini">删除</el-button>
-                  </el-popconfirm>
-                </template>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+  <div class="luffy-container">
+    <div class="container">
+      <div class="btn-group" style="margin: 5px 0">
+        <el-button size="mini" @click="add">添加订单</el-button>
       </div>
-      <el-dialog title="订单增加表" :visible.sync="isadd" width="60%">
-        <el-form :model="addform" ref="addform" class="demo-dynamic" label-width="150px">
-          <el-form-item
-            label="支付第三方订单号"
-            prop="payment_number"
-            :label-width="formLabelWidth"
-
-          >
-            <el-input v-model="addform.payment_number" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="订单号"
-            prop="order_number"
-            :label-width="formLabelWidth"
-            :rules="[
+      <el-table :data="tableData" style="width: 80%" justify="center">
+        <el-table-column label="id" width="180">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="订单号" width="180">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.order_number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary " @click="edit(scope.row)">编辑</el-button>
+            <template>
+              <el-popconfirm title="确定删除吗？" @onConfirm="del(scope.row)">
+                <el-button slot="reference" type="danger" size="mini">删除</el-button>
+              </el-popconfirm>
+            </template>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <h2></h2>
+    <div class="block">
+      <!-- <span class="demonstration">页数较少时的效果</span> -->
+      <el-pagination
+        layout="prev, pager, next"
+        :total="count"
+        :page-size="pageSize"
+        @prev-click="prevClick"
+        @next-click="nextClick"
+        @current-change="currentChange"
+        :current-page='currentPage'
+      ></el-pagination>
+    </div>
+    <el-dialog title="订单增加表" :visible.sync="isadd" width="60%">
+      <el-form :model="addform" ref="addform" class="demo-dynamic" label-width="150px">
+        <el-form-item label="支付第三方订单号" prop="payment_number" :label-width="formLabelWidth">
+          <el-input v-model="addform.payment_number" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="订单号"
+          prop="order_number"
+          :label-width="formLabelWidth"
+          :rules="[
                   { required: true, message: '请输入实付金额', trigger: 'blur' },
 
                 ]"
-          >
-            <el-input v-model="addform.order_number" autocomplete="off"></el-input>
-          </el-form-item>
+        >
+          <el-input v-model="addform.order_number" autocomplete="off"></el-input>
+        </el-form-item>
 
-          <el-form-item
-            label="订单支付类型"
-            prop="payment_type"
-            :rules="[
+        <el-form-item
+          label="订单支付类型"
+          prop="payment_type"
+          :rules="[
                   { required: true, message: '请输入订单支付类型', trigger: 'blur' }
                 ]"
-          >
-            <el-select v-model="addform.payment_type" placeholder="请选择订单支付类型">
-              <el-option label="微信" :value="0|toStr"></el-option>
-              <el-option label="支付宝" :value="1|toStr"></el-option>
-              <el-option label="贝里" :value="2|toStr"></el-option>
-              <el-option label="优惠卷" :value="3|toStr"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="订单状态"
-            prop="status"
-            :rules="[
+        >
+          <el-select v-model="addform.payment_type" placeholder="请选择订单支付类型">
+            <el-option label="微信" :value="0|toStr"></el-option>
+            <el-option label="支付宝" :value="1|toStr"></el-option>
+            <el-option label="贝里" :value="2|toStr"></el-option>
+            <el-option label="优惠卷" :value="3|toStr"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="订单状态"
+          prop="status"
+          :rules="[
             { required: true, message: '请输入订单状态订单状态', trigger: 'blur' }
               ]"
-          >
-            <el-select v-model="addform.status" placeholder="请选择订单状态">
-              <el-option label="交易成功" :value='0|toStr'></el-option>
-              <el-option label="待支付" :value="1|toStr"></el-option>
-              <el-option label="退费申请中" :value="2|toStr"></el-option>
-              <el-option label="已退费" :value="3|toStr"></el-option>
-              <el-option label="主动取消" :value="4|toStr"></el-option>
-              <el-option label="超时取消" :value="5|toStr"></el-option>
-            </el-select>
-          </el-form-item>
+        >
+          <el-select v-model="addform.status" placeholder="请选择订单状态">
+            <el-option label="交易成功" :value="0|toStr"></el-option>
+            <el-option label="待支付" :value="1|toStr"></el-option>
+            <el-option label="退费申请中" :value="2|toStr"></el-option>
+            <el-option label="已退费" :value="3|toStr"></el-option>
+            <el-option label="主动取消" :value="4|toStr"></el-option>
+            <el-option label="超时取消" :value="5|toStr"></el-option>
+          </el-select>
+        </el-form-item>
 
-          <el-form-item
-            label="实付金额"
-            prop="actual_amount"
-            :label-width="formLabelWidth"
-            :rules="[
+        <el-form-item
+          label="实付金额"
+          prop="actual_amount"
+          :label-width="formLabelWidth"
+          :rules="[
                   { required: true, message: '请输入实付金额', trigger: 'blur' },
                   { type: 'number', message: '必须为数字值'}
                 ]"
-          >
-            <el-input v-model.number="addform.actual_amount" autocomplete="off"></el-input>
-            <!-- <span class="pull-right" style="color:#F56C6C;">{{addError}}</span> -->
-          </el-form-item>
-        </el-form>
+        >
+          <el-input v-model.number="addform.actual_amount" autocomplete="off"></el-input>
+          <!-- <span class="pull-right" style="color:#F56C6C;">{{addError}}</span> -->
+        </el-form-item>
+      </el-form>
 
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isadd = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
-        </div>
-      </el-dialog>
-
-      <el-dialog title="订单更新表" :visible.sync="isedit" width="60%">
-        <el-form :model="editform" ref="editform" class="demo-dynamic" label-width="150px">
-          <el-form-item
-            label="支付第三方订单号"
-            prop="payment_number"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="editform.payment_number" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="订单号"
-            prop="order_number"
-            :label-width="formLabelWidth"
-            :rules="[
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isadd = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('addform')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="订单更新表" :visible.sync="isedit" width="60%">
+      <el-form :model="editform" ref="editform" class="demo-dynamic" label-width="150px">
+        <el-form-item label="支付第三方订单号" prop="payment_number" :label-width="formLabelWidth">
+          <el-input v-model="editform.payment_number" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="订单号"
+          prop="order_number"
+          :label-width="formLabelWidth"
+          :rules="[
                   { required: true, message: '请输入实付金额', trigger: 'blur' },
                 ]"
-          >
-            <el-input v-model="editform.order_number" autocomplete="off"></el-input>
-          </el-form-item>
+        >
+          <el-input v-model="editform.order_number" autocomplete="off"></el-input>
+        </el-form-item>
 
-          <el-form-item
-            label="订单支付类型"
-            prop="payment_type"
-            :rules="[
+        <el-form-item
+          label="订单支付类型"
+          prop="payment_type"
+          :rules="[
                   { required: true, message: '请输入订单支付类型', trigger: 'blur' }
                 ]"
-          >
-            <el-select v-model="editform.payment_type" placeholder="请选择订单支付类型">
-              <el-option label="微信" :value="0|toStr"></el-option>
-              <el-option label="支付宝" :value="1|toStr"></el-option>
-              <el-option label="贝里" :value="2|toStr"></el-option>
-              <el-option label="优惠卷" :value="3|toStr"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="订单状态"
-            prop="status"
-            :rules="[
+        >
+          <el-select v-model="editform.payment_type" placeholder="请选择订单支付类型">
+            <el-option label="微信" :value="0|toStr"></el-option>
+            <el-option label="支付宝" :value="1|toStr"></el-option>
+            <el-option label="贝里" :value="2|toStr"></el-option>
+            <el-option label="优惠卷" :value="3|toStr"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="订单状态"
+          prop="status"
+          :rules="[
             { required: true, message: '请输入订单状态订单状态', trigger: 'blur' }
               ]"
-          >
-            <el-select v-model="editform.status" placeholder="请选择订单状态">
-              <el-option label="交易成功" :value='0|toStr'></el-option>
-              <el-option label="待支付" :value="1|toStr"></el-option>
-              <el-option label="退费申请中" :value="2|toStr"></el-option>
-              <el-option label="已退费" :value="3|toStr"></el-option>
-              <el-option label="主动取消" :value="4|toStr"></el-option>
-              <el-option label="超时取消" :value="5|toStr"></el-option>
-            </el-select>
-          </el-form-item>
+        >
+          <el-select v-model="editform.status" placeholder="请选择订单状态">
+            <el-option label="交易成功" :value="0|toStr"></el-option>
+            <el-option label="待支付" :value="1|toStr"></el-option>
+            <el-option label="退费申请中" :value="2|toStr"></el-option>
+            <el-option label="已退费" :value="3|toStr"></el-option>
+            <el-option label="主动取消" :value="4|toStr"></el-option>
+            <el-option label="超时取消" :value="5|toStr"></el-option>
+          </el-select>
+        </el-form-item>
 
-          <el-form-item
-            label="实付金额"
-            prop="actual_amount"
-            :label-width="formLabelWidth"
-            :rules="[
+        <el-form-item
+          label="实付金额"
+          prop="actual_amount"
+          :label-width="formLabelWidth"
+          :rules="[
                   { required: true, message: '请输入实付金额', trigger: 'blur' },
                   { type: 'number', message: '必须为数字值'}
                 ]"
-          >
-            <el-input v-model="editform.actual_amount" autocomplete="off"></el-input>
-            <!-- <span class="pull-right" style="color:#F56C6C;">{{addError}}</span> -->
-          </el-form-item>
-        </el-form>
+        >
+          <el-input v-model="editform.actual_amount" autocomplete="off"></el-input>
+          <!-- <span class="pull-right" style="color:#F56C6C;">{{addError}}</span> -->
+        </el-form-item>
+      </el-form>
 
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="isedit = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm('editform')">确 定</el-button>
-        </div>
-      </el-dialog>
-    </template>
-  </Layout>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isedit = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('editform')">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 import Layout from "@/layout/rbac";
-import { orderGet,orderPost,orderPatch,orderDel} from "@/api/order_menu";
+import { orderGet, orderPost, orderPatch, orderDel } from "@/api/order_menu";
 
 export default {
   data() {
     return {
       tableData: [{ id: 1, title: "title" }],
       onConfirm: "delete",
+      count: 1,
+      pageSize: 1,
+      currentPage: 1,
       isadd: false,
       isedit: false,
       addError: "",
@@ -218,7 +220,7 @@ export default {
     },
     addData() {
       let uid = this.$store.getters.userInfo.id;
-      this.addform.account = uid
+      this.addform.account = uid;
       orderPost(this.addform)
         .then(res => {
           alert("submit!");
@@ -230,7 +232,7 @@ export default {
         });
     },
     editDate() {
-      console.log(this.editform)
+      console.log(this.editform);
       orderPatch(this.editform)
         .then(res => {
           alert("submit!");
@@ -274,13 +276,54 @@ export default {
       var index = this.tableData.indexOf(i);
       console.log(index);
       this.tableData.splice(index, 1);
-    }
+    },
+    prevClick(val) {
+      console.log(val);
+      let params = {
+        page: val
+      };
+      let { fullPath } = this.$route;
+      console.log(fullPath)
+      this.$router.replace({
+        path: "/redirect" + fullPath,
+        query: params
+      });
+    },
+    nextClick(val) {
+      console.log(val);
+      let params = {
+        page: val
+      };
+      let { fullPath } = this.$route;
+      console.log(fullPath)
+      this.$router.replace({
+        path: "/redirect" + fullPath,
+        query: params
+      });
+    },
+    currentChange(val) {
+      console.log(val);
+      let params = {
+        page: val
+      };
+      let { fullPath } = this.$route;
+      console.log(fullPath)
+      this.$router.replace({
+        path: "/redirect" + fullPath,
+        query: params
+      });
+    },
   },
   created() {
-    orderGet()
+    let obj = this.$route.query;
+    console.log(obj, 1111);
+
+    orderGet(obj)
       .then(res => {
-        this.tableData = res;
-        console.log(res);
+        console.log(res)
+        this.tableData = res.results;
+        this.count = res.count;
+        this.currentPage=obj.page
       })
       .catch(error => {
         console.log(error);

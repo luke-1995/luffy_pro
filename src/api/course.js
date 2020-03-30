@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 路飞课程
 export function courseGet () {
   return request({
     url: 'course/',
@@ -28,7 +28,7 @@ export function cdGet (id) {
 //     method: 'delete'
 //   })
 // }
-
+// 课程分类
 export function categoryGet () {
   return request({
     url: 'category/',

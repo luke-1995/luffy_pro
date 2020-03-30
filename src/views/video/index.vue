@@ -91,77 +91,77 @@
 </template>
 
 <script>
-import { sGet } from "@/api/section";
+import { sGet } from '@/api/section'
 export default {
-  data() {
+  data () {
     return {
       tableData: []
       // vid:''
-    };
+    }
   },
   filters: {
-    toStr: function(value) {
+    toStr: function (value) {
       if (value) {
-        value = "1-" + value.toString();
+        value = '1-' + value.toString()
       }
-      return value;
+      return value
     },
-    toFix: function(value) {
+    toFix: function (value) {
       if (value) {
-        value = value.toFixed(2);
+        value = value.toFixed(2)
       }
-      return value;
+      return value
     }
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
     },
-    setVid(row){
-      if (row.section_type===2) {
-        this.vid=row.section_link
-        this.p.changeVid(row.section_link);
-      }else if(row.section_type===1){
+    setVid (row) {
+      if (row.section_type === 2) {
+        this.vid = row.section_link
+        this.p.changeVid(row.section_link)
+      } else if (row.section_type === 1) {
         this.$message({
-            message: "这是一个练习",
-            center: true
-          });
-      }else{
+          message: '这是一个练习',
+          center: true
+        })
+      } else {
         this.$message({
-            message: "这是一个文档",
-            center: true
-          });
+          message: '这是一个文档',
+          center: true
+        })
       }
     }
   },
-  mounted() {
+  mounted () {
     let id = this.$route.params.cid
     sGet(id)
       .then(res => {
-        console.log(res);
-        this.tableData = res;
+        console.log(res)
+        this.tableData = res
 
-        this.vid = res[0].section_link;
-        console.log(this.vid, typeof this.vid);
+        this.vid = res[0].section_link
+        console.log(this.vid, typeof this.vid)
         if (this.vid) {
           var player = polyvPlayer({
-            wrap: "#player",
+            wrap: '#player',
             width: 1050,
             height: 620,
-            vid: this.vid,
+            vid: this.vid
 
-          });
+          })
           this.p = player
         }
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   },
-  beforeCreate() {},
+  beforeCreate () {},
   computed: {
     // vid:function(){
     //   if (this.tableData) {
@@ -170,7 +170,7 @@ export default {
     //   return ''
     // }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

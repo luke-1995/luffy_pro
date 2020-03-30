@@ -8,16 +8,18 @@ import Config from '@/settings'
 const service = axios.create({
   // baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api 的 base_url
   baseURL: 'http://127.0.0.1:8000/',
-  timeout: Config.timeout // 请求超时时间
+  timeout: Config.timeout, // 请求超时时间,
 })
+
 
 // request拦截器
 service.interceptors.request.use(
   config => {
-    if (localStorage.getItem('access_token')) {
-      config.headers['Authorization'] = localStorage.getItem('access_token') // 让每个请求携带自定义token 请根据实际情况自行修改
-    }
-    config.headers['Content-Type'] = 'application/json;charset=UTF8'
+    // if (localStorage.getItem('access_token')) {
+    //   config.headers.Authorization = localStorage.getItem('access_token') // 让每个请求携带自定义token 请根据实际情况自行修改
+    // }
+    config.headers.Authorization = localStorage.getItem('access_token')
+    config.headers['Content-Type'] = 'application/json;charset=UTF8;multipart/form-data'
     return config
   },
   error => {
@@ -80,8 +82,12 @@ service.interceptors.response.use(
         }
       }
     } else {
+      let message = '接口请求失败'
+      if (error.response.data.detail) {
+        message = error.response.data.detail
+      }
       Notification.error({
-        title: '接口请求失败',
+        title: message,
         duration: 5000
       })
     }

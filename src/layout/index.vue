@@ -1,22 +1,55 @@
 <template>
   <div>
-    <Nav/>
-    <router-view></router-view>
+    <Nav />
+    <el-container style="height: 500px; border: 1px solid #eee">
+      <Aside/>
+
+      <el-container>
+        <el-header style="text-align: right; font-size: 12px">
+          <el-dropdown>
+            <i class="el-icon-setting" style="margin-right: 15px"></i>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>查看</el-dropdown-item>
+              <el-dropdown-item>新增</el-dropdown-item>
+              <el-dropdown-item>删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <span>王小虎</span>
+        </el-header>
+
+        <el-main>
+          <el-row>
+    
+            <router-view></router-view>
+          </el-row>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
 import Nav from './components/nav'
+import Aside from './components/aside'
 export default {
   data () {
     return {}
   },
   components: {
-    Nav
+    Nav,
+    Aside
   }
 }
 </script>
 
-<style>
+<style lang="css" scoped>
+.el-header {
+  background-color: #b3c0d1;
+  color: #333;
+  line-height: 60px;
+}
 
+.el-aside {
+  color: #333;
+}
 </style>

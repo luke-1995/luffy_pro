@@ -36,7 +36,6 @@
         </div> -->
       </div>
 
-
 </template>
 
 <script>
@@ -83,7 +82,7 @@ export default {
         title: { text: '用户注册趋势图' },
         tooltip: {},
         xAxis: {
-          // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+
           data: this.tableData.register.x
         },
         yAxis: {},
@@ -97,7 +96,7 @@ export default {
         title: { text: '订单量报表' },
         tooltip: {},
         xAxis: {
-          // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+
           data: this.tableData.order.x
         },
         yAxis: {},

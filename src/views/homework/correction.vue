@@ -78,59 +78,59 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { tcGet, filePost } from "@/api/teacher_correction";
-import { dhGet } from "@/api/media";
-import Config from "@/settings";
-import axios from "axios";
+import Layout from '@/layout/rbac'
+import { tcGet, filePost } from '@/api/teacher_correction'
+import { dhGet } from '@/api/media'
+import Config from '@/settings'
+import axios from 'axios'
 
 export default {
-  data() {
+  data () {
     return {
       tableData: [],
       pre_url: Config.pre_url,
-      onConfirm: "delete",
+      onConfirm: 'delete',
       isadd: false,
       isedit: false,
       files: [],
-      addError: "",
+      addError: '',
       addform: {
-        title: ""
+        title: ''
       },
       editform: {
-        title: ""
+        title: ''
       },
-      formLabelWidth: "100px",
+      formLabelWidth: '100px',
       fileList: [
         {
-          name: "food.jpeg",
+          name: 'food.jpeg',
           url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
+            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }
       ]
-    };
+    }
   },
   methods: {
-    downloadItem(file) {
-      let url = this.pre_url + file;
+    downloadItem (file) {
+      let url = this.pre_url + file
       dhGet(url)
         .then(({ data }) => {
           // 为了简单起见这里blob的mime类型 固定写死了
-          let uu = this.pre_url + url;
-          let blob = new Blob([data], { type: "application/vnd.ms-excel" });
-          let link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = uu.split("/").pop();
-          link.click();
+          let uu = this.pre_url + url
+          let blob = new Blob([data], { type: 'application/vnd.ms-excel' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = uu.split('/').pop()
+          link.click()
         })
         .catch(error => {
-          console.error(error);
-        });
+          console.error(error)
+        })
     },
-    handlerUpload: function(e) {
+    handlerUpload: function (e) {
       // 获取选定的文件
-      let tFiles = e.target.files;
-      let len = tFiles.length;
+      let tFiles = e.target.files
+      let len = tFiles.length
       for (var i = 0; i < len; i++) {
         // 开始上传每一个文件
         var item = {
@@ -138,219 +138,173 @@ export default {
           uploadPercentage: 1,
           size: this.formatFileSize(tFiles[i].size, 0),
           uploadStatus: 0
-        };
+        }
 
-        console.log(item);
-        this.files.push(item);
+        console.log(item)
+        this.files.push(item)
         // 开始上传文件 新建一个formData
-        let param = new FormData();
+        let param = new FormData()
         // param.append("name", "wiiiiiinney");
         // 通过append向form对象添加数据
-        param.append("correction_file", tFiles[i]);
-        // param.append("student", "5");
-        // param.append("homework", "1");
+        param.append('correction_file', tFiles[i])
         // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        // let edit = this.editform
-        // delete edit.student
-        // for (key in this.editform) {
-        //   param.append(key,editform[key])
-        // }
-        let id = this.editform.id;
-        console.log(id);
-        console.log(param.get("correction_file"));
+        let index = this.tableData.indexOf(this.editform)
+        let id = this.editform.id
         if (this.files.length > 1) {
-          item.uploadStatus = -4;
-          return false;
+          item.uploadStatus = -4
+          return false
         }
         // 判断大小
         if (!this.checkFileSize(tFiles[i].size)) {
-          item.uploadStatus = -3;
-          return false;
+          item.uploadStatus = -3
+          return false
         }
-        if (!this.checkFileType(tFiles[i].name.split(".")[1])) {
-          item.uploadStatus = -2;
-          return false;
+        if (!this.checkFileType(tFiles[i].name.split('.')[1])) {
+          item.uploadStatus = -2
+          return false
         }
-        console.log(555);
 
-        // tcPatch(param,e,item,id)
-        //   .then(res => {
-        //     console.log(666)
-        //     // this.tableData = res;
-        //     console.log(res);
-        //     // item.uploadStatus = 2;
-
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //     console.log(777)
-        //     // item.uploadStatus = -1;
-        //   });
         // 通过axios上传文件
         // 配置
         let config = {
           // 添加请求头
           headers: {
-            "Content-Type": "multipart/form-data"
+            'Content-Type': 'multipart/form-data'
           },
           // 添加上传进度监听事件
           onUploadProgress: e => {
-            var completeProgress = (((e.loaded / e.total) * 100) | 0) + "%";
+            var completeProgress = (((e.loaded / e.total) * 100) | 0) + '%'
             // console.log(this.files);
-            item.uploadPercentage = completeProgress;
+            item.uploadPercentage = completeProgress
           }
-        };
-        // axios
-        //   .post(`http://127.0.0.1:8000/correction_file/${id}/`, param, config)
-        //   .then(function(res) {
-        //     console.log(res);
-        //     if (res.data.code === 1000) {
-        //       item.uploadStatus = 2;
-        //     } else if (res.data.code === 1010) {
-        //       item.uploadStatus = -5;
-        //     } else {
-        //       item.uploadStatus = -1;
-        //     }
-        //   })
-        //   .catch(function(error) {
-        //     console.log(error);
-        //     item.uploadStatus = -1;
-        //   });
-
+        }
         filePost(id, param, config)
           .then(res => {
-            console.log(res);
+            console.log(res)
             if (res.code === 1000) {
-              item.uploadStatus = 2;
+              item.uploadStatus = 2
+              this.tableData[index].homework_status_info='已批改'
             } else if (res.code === 1010) {
-              item.uploadStatus = -5;
+              item.uploadStatus = -5
             } else {
-              item.uploadStatus = -1;
+              item.uploadStatus = -1
             }
           })
           .catch(err => {
-            console.log(err);
+            console.log(err)
             item.uploadStatus = -1
-          });
+          })
 
-        // cfPost(param,config,id)
-        //   .then(res => {
-        //     // this.tableData = res;
-        //     console.log(res);
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //   });
+
       }
     },
-    formatFileSize: function(fileSize, idx) {
-      var units = ["B", "KB", "MB", "GB"];
-      idx = idx || 0;
+    formatFileSize: function (fileSize, idx) {
+      var units = ['B', 'KB', 'MB', 'GB']
+      idx = idx || 0
       if (fileSize < 1024 || idx === units.length - 1) {
-        return fileSize.toFixed(1) + units[idx];
+        return fileSize.toFixed(1) + units[idx]
       }
-      return this.formatFileSize(fileSize / 1024, ++idx);
+      return this.formatFileSize(fileSize / 1024, ++idx)
     },
-    checkFileType: function(fileType) {
-      const acceptTypes = ["txt"];
+    checkFileType: function (fileType) {
+      const acceptTypes = ['txt']
       for (var i = 0; i < acceptTypes.length; i++) {
         if (fileType === acceptTypes[i]) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
-    checkFileSize: function(fileSize) {
+    checkFileSize: function (fileSize) {
       // 2M
-      const MAX_SIZE = 2 * 1024 * 1024;
+      const MAX_SIZE = 2 * 1024 * 1024
       if (fileSize > MAX_SIZE) {
-        return false;
+        return false
       }
-      return true;
+      return true
     },
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
+    addData () {
       rolePost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
+    editDate () {
       rolePatch(this.editform)
         .then(res => {
-          alert("submit!");
-          this.isedit = false;
+          alert('submit!')
+          this.isedit = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       roleDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     },
-    submitUpload() {
-      this.$refs.upload.submit();
+    submitUpload () {
+      this.$refs.upload.submit()
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
     },
-    handlePreview(file) {
-      console.log(file);
+    handlePreview (file) {
+      console.log(file)
     }
   },
-  created() {
+  created () {
     tcGet()
       .then(res => {
-        this.tableData = res;
-        console.log(res);
+        this.tableData = res
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

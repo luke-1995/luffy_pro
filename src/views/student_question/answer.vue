@@ -82,113 +82,113 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { taGet, taPatch } from "@/api/teacher_answer";
+import Layout from '@/layout/rbac'
+import { taGet, taPatch } from '@/api/teacher_answer'
 
 export default {
-  data() {
+  data () {
     return {
       tableData: [
         {
           id: 0,
-          title: "问题标题",
-          question_status: "未回答",
-          content: "xxx",
-          answer: ""
+          title: '问题标题',
+          question_status: '未回答',
+          content: 'xxx',
+          answer: ''
         }
       ],
-      onConfirm: "delete",
+      onConfirm: 'delete',
       isadd: false,
       isedit: false,
-      addError: "",
+      addError: '',
       addform: {
-        title: ""
+        title: ''
       },
       editform: {
-        content: "问题内容"
+        content: '问题内容'
       },
-      formLabelWidth: "100px"
-    };
+      formLabelWidth: '100px'
+    }
   },
   methods: {
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
+    addData () {
       rolePost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
-      delete this.editform.student_name;
-      delete this.editform.question_status_info;
-      this.editform.question_status = 2;
+    editDate () {
+      delete this.editform.student_name
+      delete this.editform.question_status_info
+      this.editform.question_status = 2
       taPatch(this.editform)
         .then(res => {
-          alert("submit!");
-          this.editform.question_status_info = "已回答";
-          this.isedit = false;
+          alert('submit!')
+          this.editform.question_status_info = '已回答'
+          this.isedit = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       roleDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     }
   },
-  created() {
+  created () {
     taGet()
       .then(res => {
-        this.tableData = res;
-        console.log(res);
+        this.tableData = res
+        console.log(res)
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store'
+
 
 Vue.use(Router)
 
@@ -51,13 +51,12 @@ export const constantRouterMap = [
 ]
 
 // const router = new Router({
-  
+
 // })
 const originalPush = Router.prototype.push
-Router.prototype.push = function push(location) {
+Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
-
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -69,12 +68,9 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
-
-
 
 export default router

@@ -8,9 +8,8 @@ import Config from '@/settings'
 const service = axios.create({
   // baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api 的 base_url
   baseURL: 'http://127.0.0.1:8000/',
-  timeout: Config.timeout, // 请求超时时间,
+  timeout: Config.timeout // 请求超时时间,
 })
-
 
 // request拦截器
 service.interceptors.request.use(
@@ -90,6 +89,10 @@ service.interceptors.response.use(
         title: message,
         duration: 5000
       })
+      if (message === 'token过期') {
+        localStorage.removeItem('access_token')
+        router.push({ name: 'login'})
+      }
     }
     return Promise.reject(error)
   }

@@ -18,31 +18,31 @@
 
 <script>
 export default {
-  name: "Aside",
-  data() {
+  name: 'Aside',
+  data () {
     return {
       routers: this.$store.getters.routers
-    };
+    }
   },
-  created() {
-    console.log(this.$store.getters.routers);
+  created () {
+    
   },
   filters: {
-    toStr: function(value) {
-      value = value.toString();
-      return value;
+    toStr: function (value) {
+      value = value.toString()
+      return value
     }
   },
   computed: {
-    title: function(router) {},
-    activeIndex:function(){
-      let { fullPath } = this.$route;
+    title: function (router) {},
+    activeIndex: function () {
+      let { fullPath } = this.$route
       console.log(fullPath)
       return fullPath
     }
 
   }
-};
+}
 </script>
 
 <style>

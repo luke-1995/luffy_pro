@@ -7,14 +7,6 @@ export function dsGet () {
   })
 }
 
-// export function rolePost (params) {
-//   return request({
-//     url: 'role/',
-//     method: 'post',
-//     data: params
-//   })
-// }
-
 export function dsPatch (params) {
   return request({
     url: `dis_stu/${params.id}/`,
@@ -22,10 +14,3 @@ export function dsPatch (params) {
     data: params
   })
 }
-
-// export function roleDel (id) {
-//   return request({
-//     url: `role/${id}/`,
-//     method: 'delete'
-//   })
-// }

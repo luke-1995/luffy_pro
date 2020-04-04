@@ -106,13 +106,13 @@
 
 <script>
 export default {
-  created() {
-    let param = new FormData();
+  created () {
+    let param = new FormData()
     for (let key in this.editform) {
-      param.append(key, this.editform[key]);
+      param.append(key, this.editform[key])
     }
   }
-};
+}
 </script>
 
 <style>

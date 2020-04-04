@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <template #content>
+
       <div class="luffy-container">
         <div class="container">
           <div class="form-group clearfix">
@@ -20,8 +19,7 @@
           <button class="btn btn-info pull-right" style="margin: 5px 0;" @click="submit">提交</button>
         </div>
       </div>
-    </template>
-  </Layout>
+
 </template>
 
 <script>

@@ -13,14 +13,14 @@ export function hwPut (chapter_id, params) {
     method: 'put',
     data: params
   })
-} 
+}
 
 // 上传作业
-export function filePost (id,params,config) {
+export function filePost (id, params, config) {
   return request({
     ...config,
     url: `homework_file/${id}/`,
     method: 'post',
-    data:params
+    data: params
   })
 }

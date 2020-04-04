@@ -93,131 +93,111 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import {sqGet,sqPost,sqPatch,sqDel} from "@/api/student_question";
- 
+import Layout from '@/layout/rbac'
+import {sqGet, sqPost, sqPatch, sqDel} from '@/api/student_question'
+
 export default {
-  data() {
+  data () {
     return {
-      tableData: [
-        {
-          id: 0,
-          title: "问题标题",
-          question_status: "未回答",
-          content: "xxx",
-          answer: ""
-        }
-      ],
-      onConfirm: "delete",
+      tableData: [],
+      onConfirm: 'delete',
       isadd: false,
       isedit: false,
-      addError: "",
+      addError: '',
       addform: {
-        title: ""
+        title: ''
       },
       editform: {
-        content: "问题内容"
+        content: '问题内容'
       },
-      formLabelWidth: "100px"
-    };
+      formLabelWidth: '100px'
+    }
   },
   filters: {
-    toQS: function(value) {
-      if (value == "1") {
-        return "未回答";
+    toQS: function (value) {
+      if (value == '1') {
+        return '未回答'
       } else {
-        return "已回答";
+        return '已回答'
       }
     }
   },
   methods: {
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
-      // let uid = this.$store.getters.userInfo.id
-      // this.addform.student = uid
-      // console.log(this.addform)
-
-      // sqPost(this.addform)
-      //   .then(res => {
-      //     console.log(res)
-      //     alert("submit!");
-      //     this.tableData.push(res);
-      //     this.isadd = false;
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //     if (error.response.data.detail) {
-      //       this.$message({
-      //       message: error.response.data.detail,
-      //       center: true
-      //     });
-      //     }
-          
-      //   });
-    },
-    editDate() {
-      sqPatch(this.editform)
+    addData () {
+      sqPost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.isedit = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
+          this.addform = {}
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    editDate () {
+      sqPatch(this.editform)
+        .then(res => {
+          alert('submit!')
+          this.isedit = false
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       sqDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     }
   },
-  created() {
-
+  created () {
     sqGet()
       .then(res => {
         console.log(res)
-        this.tableData=res
+        this.tableData = res
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

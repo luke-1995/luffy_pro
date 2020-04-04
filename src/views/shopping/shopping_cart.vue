@@ -94,10 +94,12 @@ export default {
         ) {
           return element.course_id
         })
-        console.log(course_list,3333)
+
         smPost({course_list: course_list})
           .then(res => {
             if (res.code === 1000) {
+              let num = this.tableData.length-this.multipleSelection.length
+              this.$store.dispatch('updateShoppingCart', num)
               this.$router.push({name: 'settlement'})
             } else {
               this.$message({
@@ -188,7 +190,7 @@ export default {
       })
       // let Num = this.$store.getters.userInfo.shop_cart_num;
       let num = this.tableData.length
-      this.$store.commit('updateShoppingCart', num)
+      this.$store.dispatch('updateShoppingCart', num)
     }
   },
   created () {

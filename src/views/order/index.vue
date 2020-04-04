@@ -177,162 +177,162 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { orderGet, orderPost, orderPatch, orderDel } from "@/api/order_menu";
+import Layout from '@/layout/rbac'
+import { orderGet, orderPost, orderPatch, orderDel } from '@/api/order_menu'
 
 export default {
-  data() {
+  data () {
     return {
-      tableData: [{ id: 1, title: "title" }],
-      onConfirm: "delete",
+      tableData: [],
+      onConfirm: 'delete',
       count: 1,
       pageSize: 1,
       currentPage: 1,
       isadd: false,
       isedit: false,
-      addError: "",
+      addError: '',
       addform: {
-        title: ""
+        title: ''
       },
       editform: {
-        title: ""
+        title: ''
       },
-      formLabelWidth: "150px"
-    };
+      formLabelWidth: '150px'
+    }
   },
   filters: {
-    toStr: function(value) {
+    toStr: function (value) {
       if (value) {
-        value = value.toString();
+        value = value.toString()
       }
-      return value;
+      return value
     },
-    toFix: function(value) {
+    toFix: function (value) {
       if (value) {
-        value = value.toFixed(2);
+        value = value.toFixed(2)
       }
-      return value;
+      return value
     }
   },
   methods: {
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
-      let uid = this.$store.getters.userInfo.id;
-      this.addform.account = uid;
+    addData () {
+      let uid = this.$store.getters.userInfo.id
+      this.addform.account = uid
       orderPost(this.addform)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
-      console.log(this.editform);
+    editDate () {
+      console.log(this.editform)
       orderPatch(this.editform)
         .then(res => {
-          alert("submit!");
-          this.isedit = false;
+          alert('submit!')
+          this.isedit = false
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       orderDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     },
-    prevClick(val) {
-      console.log(val);
+    prevClick (val) {
+      console.log(val)
       let params = {
         page: val
-      };
-      let { fullPath } = this.$route;
+      }
+      let { fullPath } = this.$route
       console.log(fullPath)
       this.$router.replace({
-        path: "/redirect" + fullPath,
+        path: '/redirect' + fullPath,
         query: params
-      });
+      })
     },
-    nextClick(val) {
-      console.log(val);
+    nextClick (val) {
+      console.log(val)
       let params = {
         page: val
-      };
-      let { fullPath } = this.$route;
+      }
+      let { fullPath } = this.$route
       console.log(fullPath)
       this.$router.replace({
-        path: "/redirect" + fullPath,
+        path: '/redirect' + fullPath,
         query: params
-      });
+      })
     },
-    currentChange(val) {
-      console.log(val);
+    currentChange (val) {
+      console.log(val)
       let params = {
         page: val
-      };
-      let { fullPath } = this.$route;
+      }
+      let { fullPath } = this.$route
       console.log(fullPath)
       this.$router.replace({
-        path: "/redirect" + fullPath,
+        path: '/redirect' + fullPath,
         query: params
-      });
-    },
+      })
+    }
   },
-  created() {
-    let obj = this.$route.query;
-    console.log(obj, 1111);
+  created () {
+    let obj = this.$route.query
+    console.log(obj, 1111)
 
     orderGet(obj)
       .then(res => {
         console.log(res)
-        this.tableData = res.results;
-        this.count = res.count;
-        this.currentPage=obj.page
+        this.tableData = res.results
+        this.count = res.count
+        this.currentPage = obj.page
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

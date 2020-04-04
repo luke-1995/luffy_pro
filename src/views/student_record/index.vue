@@ -85,7 +85,7 @@ export default {
   },
   data () {
     return {
-      tableData: [{id: 1, note: '111', date: 'date', teacher: 'teacher', student: 'student'}],
+      tableData: [],
       addform: {},
       editform: {},
       formLabelWidth: '100px',
@@ -111,11 +111,13 @@ export default {
         })
     },
     editDate () {
+      var index = this.tableData.indexOf(this.editform)
       delete this.editform.student_name
-      // delete this.editform.date
+      delete this.editform.date
       console.log(this.editform)
       srPatch(this.editform)
         .then(res => {
+          this.tableData[index] = res
           alert('submit!')
           this.isedit = false
         })

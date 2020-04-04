@@ -4,7 +4,7 @@ export function orderGet (params) {
   return request({
     url: 'order_menu/',
     method: 'get',
-    params:params
+    params: params
   })
 }
 

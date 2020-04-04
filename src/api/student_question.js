@@ -14,7 +14,7 @@ export function sqPost (params) {
     method: 'post',
     data: params
   })
-}
+} 
 
 export function sqPatch (params) {
   return request({

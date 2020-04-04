@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function scGet () {
   return request({
     url: 'shopping_cart/',
-    method: 'get',
+    method: 'get'
   })
 }
 

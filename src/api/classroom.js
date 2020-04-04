@@ -14,4 +14,3 @@ export function lpPatch (id, params) {
     data: params
   })
 }
-

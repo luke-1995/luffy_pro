@@ -266,176 +266,176 @@
 </template>
 
 <script>
-import Layout from "@/layout/rbac";
-import { cmGet, cmPost, cmPatch, cmDel } from "@/api/course_menu";
-import { categoryGet } from "@/api/course";
+import Layout from '@/layout/rbac'
+import { cmGet, cmPost, cmPatch, cmDel } from '@/api/course_menu'
+import { categoryGet } from '@/api/course'
 
 export default {
-  data() {
+  data () {
     return {
-      tableData: [{ id: 1, title: "title" }],
-      onConfirm: "delete",
+      tableData: [{ id: 1, title: 'title' }],
+      onConfirm: 'delete',
       isadd: false,
       isedit: false,
-      addError: "",
+      addError: '',
       category: [],
       files: [],
       editfiles: [],
       COURSE_TYPE_CHOICES: [
-        { id: 0, title: "付费" },
-        { id: 1, title: "vip专享" }
+        { id: 0, title: '付费' },
+        { id: 1, title: 'vip专享' }
       ],
       status_choices: [
-        { id: 0, title: "上线" },
-        { id: 1, title: "下线" },
-        { id: 2, title: "预上线" }
+        { id: 0, title: '上线' },
+        { id: 1, title: '下线' },
+        { id: 2, title: '预上线' }
       ],
       addform: {
-        title: "",
+        title: '',
         study_num: 0
       },
       editform: {
-        title: ""
+        title: ''
       },
-      formLabelWidth: "150px"
-    };
+      formLabelWidth: '150px'
+    }
   },
   filters: {
-    toStr: function(value) {
+    toStr: function (value) {
       if (value) {
-        value = value.toString();
+        value = value.toString()
       }
-      return value;
+      return value
     },
-    toFix: function(value) {
+    toFix: function (value) {
       if (value) {
-        value = value.toFixed(2);
+        value = value.toFixed(2)
       }
-      return value;
+      return value
     }
   },
   methods: {
-    handlePreview(file) {
-      console.log(file);
+    handlePreview (file) {
+      console.log(file)
     },
-    handlerUpload(e) {
-      this.files = e.target.files;
-      console.log(this.files);
+    handlerUpload (e) {
+      this.files = e.target.files
+      console.log(this.files)
     },
-    editHandlerUpload(e) {
-      this.editfiles = e.target.files;
+    editHandlerUpload (e) {
+      this.editfiles = e.target.files
     },
-    add() {
-      this.isadd = true;
+    add () {
+      this.isadd = true
     },
-    addData() {
-      let param = new FormData();
+    addData () {
+      let param = new FormData()
       for (let key in this.addform) {
-        param.append(key, this.addform[key]);
+        param.append(key, this.addform[key])
       }
       if (!this.files[0]) {
         this.$message({
-          message: "请上传图片",
+          message: '请上传图片',
           center: true
-        });
-        return;
+        })
+        return
       }
-      param.append("course_img", this.files[0]);
+      param.append('course_img', this.files[0])
 
       cmPost(param)
         .then(res => {
-          alert("submit!");
-          this.tableData.push(res);
-          this.isadd = false;
+          alert('submit!')
+          this.tableData.push(res)
+          this.isadd = false
           this.files = []
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    editDate() {
+    editDate () {
       if (this.editfiles[0]) {
-        let param = new FormData();
+        let param = new FormData()
         for (let key in this.editform) {
-          param.append(key, this.editform[key]);
+          param.append(key, this.editform[key])
         }
-        param.append("course_img", this.editfiles[0]);
+        param.append('course_img', this.editfiles[0])
         cmPatch(param)
           .then(res => {
-            alert("submit!");
-            this.isedit = false;
+            alert('submit!')
+            this.isedit = false
             this.editfiles = []
           })
           .catch(error => {
-            console.log(error);
-          });
+            console.log(error)
+          })
       } else {
         delete this.editform.course_img
         cmPatch(this.editform)
           .then(res => {
-            alert("submit!");
-            this.isedit = false;
+            alert('submit!')
+            this.isedit = false
           })
           .catch(error => {
-            console.log(error);
-          });
+            console.log(error)
+          })
       }
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           } else {
-            this.editDate();
+            this.editDate()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
 
-    edit(row) {
-      this.editform = row;
-      this.isedit = true;
+    edit (row) {
+      this.editform = row
+      this.isedit = true
     },
-    del(row) {
+    del (row) {
       cmDel(row.id)
         .then(res => {
           if (!res) {
-            this.delFun(row);
+            this.delFun(row)
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    delFun(i) {
-      var index = this.tableData.indexOf(i);
-      console.log(index);
-      this.tableData.splice(index, 1);
+    delFun (i) {
+      var index = this.tableData.indexOf(i)
+      console.log(index)
+      this.tableData.splice(index, 1)
     }
   },
-  created() {
+  created () {
     cmGet()
       .then(res => {
-        this.tableData = res;
-        console.log(res);
+        this.tableData = res
+        console.log(res)
       })
       .catch(error => {
-        console.log(error);
-      });
+        console.log(error)
+      })
     categoryGet()
       .then(res => {
-        this.category = res;
+        this.category = res
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   },
   components: {
     Layout
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

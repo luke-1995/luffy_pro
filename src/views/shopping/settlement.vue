@@ -1,9 +1,6 @@
 <template>
   <div class="shopping-cart-wrap">
-    <!-- <h3 class="shopping-cart-tit">
-      我的购物车
-      <small>共{{tableData.length}}门课程</small>
-    </h3>-->
+
     <h3></h3>
     <div class="row">
       <template>
@@ -76,19 +73,7 @@
         <el-button type="warning" @click="buy">立即支付</el-button>
       </h3>
     </div>
-    <!-- <el-dialog title="支付表(在redis中生成订单,等待支付)" :visible.sync="ispay">
-      <img
-        src="https://m.qpic.cn/psc?/V13PfEOv10xX31/N6ix9ropXhYRy3eob.4AqyWQh09s46z1Ex2dPmrkTr9MGcu4dzwZrFTgJHiBn2GYwgFYKgn0NkgmUIUCQv4JLA!!/b&bo=OATJBQAAAAADB9I!&rf=viewer_4"
-        alt
-        style="wight:200px;height:200px;"
 
-      />
-      <p>免费获得,已用贝里或抵扣卷抵消</p>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="ispay = false">取 消</el-button>
-        <el-button type="primary" @click="payment">模拟完成支付,在数据库生成订单</el-button>
-      </div>
-    </el-dialog>-->
   </div>
 </template>
 
@@ -100,16 +85,7 @@ export default {
   name: 'ShopCart',
   data () {
     return {
-      tableData: [
-        // {
-        //   title: "我是标题",
-        //   price_policy_default_id: 1,
-        //   price_policy_dic: {
-        //     "1": { id: 1, valid_period: "7000000天", price: "1000000" },
-        //     "2": { id: 2, valid_period: "27000000天", price: "12000000" }
-        //   }
-        // }
-      ],
+      tableData: [],
       pre_url: Config.pre_url,
       kk: 1,
       global_coupon: {},
@@ -426,7 +402,7 @@ export default {
           // this.tableData = res.data[0];
           res.data.forEach(row => {
             if (typeof row === 'object' && row.constructor == Array) {
-              console.log(row);
+              console.log(row)
               this.tableData = row
             } else {
               this.default_global_coupon_id = row.default_global_coupon_id

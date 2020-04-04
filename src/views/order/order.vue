@@ -111,7 +111,7 @@ export default {
           params: { actualTotal: row.actual_amount, orderId: row.id }
         })
       } else {
-        return this.$router.push({ name: 'home' })
+        return this.$router.push({ name: 'classroom' })
       }
     }
   }

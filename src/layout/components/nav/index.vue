@@ -16,27 +16,11 @@
                 </div>
 
                 <!-- <el-dropdown> -->
-               <div class="nav-right "  @mouseenter = 'enterHandler' @mouseleave ='leaveHandler' v-if="userInfo">
+               <div class="nav-right "  @mouseenter = 'enterHandler' @mouseleave ='leaveHandler' v-if="userInfo.username">
                   <span class = 'el-dropdown-link'>学习中心</span>
                   <span class="user">{{userInfo.username}}</span>
                   <!-- <img :src="userInfo.avatar" alt=""> -->
                   <ul class="my_account" v-show = 'isShow'>
-                      <li>
-                        我的账户
-                        <i>></i>
-                      </li>
-                      <li>
-                        我的订单
-                        <i>></i>
-                      </li>
-                      <li>
-                        我的优惠券
-                        <i>></i>
-                      </li>
-                      <li>
-                        <!-- 我的消息<span class="msg">{{userInfo.notice_num}}</span> -->
-                        <i>></i>
-                      </li>
                       <li   >
                        购物车<span class="count">({{userInfo.shop_cart_num}})</span>
                         <i>></i>
@@ -50,9 +34,9 @@
               <!-- </el-dropdown> -->
                 <div class="nav-right" v-else>
 
-                  <span>登录</span>
-                  &nbsp;| &nbsp;
-                  <span>注册</span>
+                  <span><router-link :to="{name:'login'}">登录</router-link></span>
+                  <!-- &nbsp;| &nbsp; -->
+                  <!-- <span><router-link :to="{name:'login'}">注册</router-link> </span> -->
 
                 </div>
             </div>
@@ -92,9 +76,9 @@ export default {
     leaveHandler () {
       this.isShow = false
     },
-    logout(){
+    logout () {
       this.$store.dispatch('Logout').then(
-        ()=>{this.$router.push({name:'login'})}
+        () => { this.$router.push({name: 'login'}) }
       )
     }
 

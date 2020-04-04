@@ -1,6 +1,6 @@
 import Config from '@/settings'
 import router from './router'
-import {createRouter} from './router'
+
 import store from '../store'
 import { perGet } from '@/api/permission'
 import { filterAsyncRouter } from '@/store/modules/permission'
@@ -52,15 +52,9 @@ export const loadMenus = (next, to) => {
   })
 }
 
-
 export const resetRouter = () => {
   store.commit('RESET_ADDROUTERS')
 }
 
-
-// export function resetRouter() {
-//   const newRouter = createRouter()
-//   router.matcher = newRouter.matcher // reset router
-// }
 
 export default router

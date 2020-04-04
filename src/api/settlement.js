@@ -22,11 +22,3 @@ export function smPut (params) {
     data: params
   })
 }
-
-// export function scDel (params) {
-//   return request({
-//     url: 'settlement/',
-//     method: 'delete',
-//     data: params,
-//   })
-// }

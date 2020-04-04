@@ -66,11 +66,11 @@
 </template>
 
 <script>
-import { cdGet } from "@/api/course";
-import { scGet, scPost, scPut } from "@/api/shopping_cart";
+import { cdGet } from '@/api/course'
+import { scGet, scPost, scPut } from '@/api/shopping_cart'
 export default {
-  name: "CourseDetail",
-  data() {
+  name: 'CourseDetail',
+  data () {
     return {
       courseDetail: {},
       priceId: null,
@@ -79,134 +79,135 @@ export default {
         // {id: 2, price: 99, time: '有效期两个月'},
         // {id: 3, price: 99, time: '有效期三个月'}
       ]
-    };
+    }
   },
   methods: {
-    priceHandler(id) {
-      this.priceId = id;
+    priceHandler (id) {
+      this.priceId = id
     },
-    add(obj, num) {
+    add (obj, num) {
       scPost(obj)
         .then(res => {
           if (res.code === 1000) {
             this.$message({
-              message: "加入购物车成功",
+              message: '加入购物车成功',
               center: true
-            });
-            this.$store.commit("updateShoppingCart", num);
+            })
+            console.log(num,11111111)
+            this.$store.dispatch('updateShoppingCart', num)
           } else {
             this.$message({
               message: res.errors,
               center: true
-            });
+            })
           }
         })
         .catch(err => {
-          console.log(err);
+          console.log(err)
           this.$message({
-            message: "加入购物车失败,请重新加入",
+            message: '加入购物车失败,请重新加入',
             center: true
-          });
-        });
+          })
+        })
     },
-    edit(obj, num) {
+    edit (obj, num) {
       scPut(obj)
         .then(res => {
           if (res.code === 1000) {
             this.$message({
-              message: "更新购物车成功",
+              message: '更新购物车成功',
               center: true
-            });
+            })
 
-            this.$store.commit("updateShoppingCart", num);
+            this.$store.commit('updateShoppingCart', num)
           } else {
             this.$message({
               message: res.errors,
               center: true
-            });
+            })
           }
         })
         .catch(err => {
-          console.log(err);
+          console.log(err)
           this.$message({
-            message: "更新购物车失败",
+            message: '更新购物车失败',
             center: true
-          });
-        });
+          })
+        })
     },
-    addShopping() {
+    addShopping () {
       if (this.priceId) {
-        let uid = this.$store.getters.userInfo.id;
+        let uid = this.$store.getters.userInfo.id
 
         if (uid) {
           let obj = {
             course_id: this.courseDetail.course.id,
             price_policy_id: this.priceId
-          };
+          }
           scGet()
             .then(res => {
               if (res.code === 1000) {
-                console.log(res.data);
-                console.log(res.data.length);
-                let num = res.data.length;
-                let Num = this.$store.getters.userInfo.shop_cart_num;
-                console.log(num, typeof num);
-                console.log(Num, typeof Num);
+                console.log(res.data)
+                console.log(res.data.length)
+                let num = res.data.length
+                let Num = this.$store.getters.userInfo.shop_cart_num
+                console.log(num, typeof num)
+                console.log(Num, typeof Num)
                 if (Num && num) {
-                  let flag = false;
+                  let flag = false
                   res.data.forEach(row => {
                     if (this.courseDetail.course.id == row.course_id) {
-                      flag = true;
+                      flag = true
                     }
-                  });
+                  })
                   if (flag) {
-                    this.edit(obj, num);
+                    this.edit(obj, num)
                   } else {
-                    let updateNum = num + 1;
-                    this.add(obj, updateNum);
+                    let updateNum = num + 1
+                    this.add(obj, updateNum)
                   }
                 } else {
-                  let updateNum = num + 1;
-                  this.add(obj, updateNum);
+                  let updateNum = num + 1
+                  this.add(obj, updateNum)
                 }
               }
             })
             .catch(err => {
-              console.log(err);
+              console.log(err)
               this.$message({
-                message: "加入购物车失败,请重新操作",
+                message: '加入购物车失败,请重新操作',
                 center: true
-              });
-            });
+              })
+            })
         } else {
           // 没有登录就跳转到登录页面
           this.$router.push({
-            name: "login",
+            name: 'login',
             query: { redirect: location.href }
-          });
+          })
         }
       } else {
         this.$message({
-          message: "未选择套餐",
+          message: '未选择套餐',
           center: true
-        });
+        })
       }
     }
   },
-  created() {
-    let id = this.$route.params.cid;
+  created () {
+    let id = this.$route.params.cid
     cdGet(id)
       .then(res => {
         if (res) {
-          console.log(res);
-          this.courseDetail = res;
+          console.log(res)
+          this.courseDetail = res
         }
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

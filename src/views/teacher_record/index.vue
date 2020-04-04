@@ -2,9 +2,7 @@
 
       <div class="luffy-container">
         <div class="container">
-          <!-- <div class="btn-group" style="margin: 5px 0">
-            <el-button size="mini" @click="add">添加角色</el-button>
-          </div>-->
+
           <el-table :data="tableData" style="width: 80%" justify="center">
             <el-table-column label="id" width="180">
               <template slot-scope="scope">
@@ -36,7 +34,7 @@
 
 <script>
 import Layout from '@/layout/rbac'
-import {trGet} from "@/api/teacher_record";
+import {trGet} from '@/api/teacher_record'
 
 export default {
   data () {

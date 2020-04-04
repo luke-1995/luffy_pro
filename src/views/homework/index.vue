@@ -114,94 +114,94 @@
 </template>
 
 <script>
-import { hwGet, hwPut, filePost } from "@/api/homework";
-import { dhGet } from "@/api/media";
-import Config from "@/settings";
-import axios from "axios";
+import { hwGet, hwPut, filePost } from '@/api/homework'
+import { dhGet } from '@/api/media'
+import Config from '@/settings'
+import axios from 'axios'
 export default {
-  data() {
+  data () {
     return {
-      activeNames: ["1"],
+      activeNames: ['1'],
       tableData: [],
       editform: {},
       addform: {},
-      addError: "",
+      addError: '',
       isedit: false,
       isadd: false,
       files: [],
-      formLabelWidth: "100px"
-    };
+      formLabelWidth: '100px'
+    }
   },
-  created() {
-    let cid = this.$route.params.cid;
+  created () {
+    let cid = this.$route.params.cid
     hwGet(cid)
       .then(res => {
-        this.tableData = res;
+        this.tableData = res
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   },
   methods: {
-    edit(row) {
-      this.editform = row;
-      console.log(row);
+    edit (row) {
+      this.editform = row
+      console.log(row)
       // let index = this.tableData.indexOf(this.editform);
       // this.tableData[index].homework_record.file = 1;
-      this.isedit = true;
+      this.isedit = true
     },
-    add(row) {
-      this.isadd = true;
-      this.addform = row;
+    add (row) {
+      this.isadd = true
+      this.addform = row
     },
-    addData() {
-      let id = this.addform.id;
+    addData () {
+      let id = this.addform.id
       hwPut(id, this.addform)
         .then(res => {
-          alert("submit!");
-          console.log(res);
-          let index = this.tableData.indexOf(this.addform);
-          this.tableData[index].homework_record.comment = res.comment;
+          alert('submit!')
+          console.log(res)
+          let index = this.tableData.indexOf(this.addform)
+          this.tableData[index].homework_record.comment = res.comment
           // this.tableData.push(res)
-          this.isadd = false;
+          this.isadd = false
         })
         .catch(error => {
-          console.log(error);
-          this.addError = error;
-        });
+          console.log(error)
+          this.addError = error
+        })
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (formName === "addform") {
-            this.addData();
+          if (formName === 'addform') {
+            this.addData()
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    downloadItem(file) {
-      let url = Config.pre_url + file;
+    downloadItem (file) {
+      let url = Config.pre_url + file
       dhGet(url)
         .then(({ data }) => {
           // 为了简单起见这里blob的mime类型 固定写死了
-          let uu = Config.pre_url + url;
-          let blob = new Blob([data], { type: "application/vnd.ms-excel" });
-          let link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = uu.split("/").pop();
-          link.click();
+          let uu = Config.pre_url + url
+          let blob = new Blob([data], { type: 'application/vnd.ms-excel' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = uu.split('/').pop()
+          link.click()
         })
         .catch(error => {
-          console.error(error);
-        });
+          console.error(error)
+        })
     },
-    handlerUpload: function(e) {
+    handlerUpload: function (e) {
       // 获取选定的文件
-      let tFiles = e.target.files;
-      let len = tFiles.length;
+      let tFiles = e.target.files
+      let len = tFiles.length
       for (var i = 0; i < len; i++) {
         // 开始上传每一个文件
         var item = {
@@ -209,37 +209,28 @@ export default {
           uploadPercentage: 1,
           size: this.formatFileSize(tFiles[i].size, 0),
           uploadStatus: 0
-        };
+        }
 
-        console.log(item);
-        this.files.push(item);
+
+        this.files.push(item)
         // 开始上传文件 新建一个formData
-        let param = new FormData();
-        // param.append("name", "wiiiiiinney");
+        let param = new FormData()
         // 通过append向form对象添加数据
-        param.append("file", tFiles[i]);
-        // param.append("student", "5");
-        // param.append("homework", "1");
+        param.append('file', tFiles[i])
         // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        // let edit = this.editform
-        // delete edit.student
-        // for (key in this.editform) {
-        //   param.append(key,editform[key])
-        // }
-        let id = this.editform.homework_record.id;
-        console.log(param.get("file"));
+        let id = this.editform.homework_record.id
         if (this.files.length > 1) {
-          item.uploadStatus = -4;
-          return false;
+          item.uploadStatus = -4
+          return false
         }
         // 判断大小
         if (!this.checkFileSize(tFiles[i].size)) {
-          item.uploadStatus = -3;
-          return false;
+          item.uploadStatus = -3
+          return false
         }
-        if (!this.checkFileType(tFiles[i].name.split(".")[1])) {
-          item.uploadStatus = -2;
-          return false;
+        if (!this.checkFileType(tFiles[i].name.split('.')[1])) {
+          item.uploadStatus = -2
+          return false
         }
 
         // 通过axios上传文件
@@ -247,88 +238,68 @@ export default {
         let config = {
           // 添加请求头
           headers: {
-            "Content-Type": "multipart/form-data"
+            'Content-Type': 'multipart/form-data'
           },
           // 添加上传进度监听事件
           onUploadProgress: e => {
-            var completeProgress = (((e.loaded / e.total) * 100) | 0) + "%";
+            var completeProgress = (((e.loaded / e.total) * 100) | 0) + '%'
             // console.log(this.files);
-            item.uploadPercentage = completeProgress;
+            item.uploadPercentage = completeProgress
           }
-        };
-        // axios
-        //   .post(`http://127.0.0.1:8000/homework_file/${id}/`, param, config)
-        //   .then(res => {
-        //     console.log(res)
-        //     if (res.data.code === 1000) {
-        //       let index = this.tableData.indexOf(this.editform)
-        //       this.tableData[index].homework_record.file = res.data.data.file
-        //       this.tableData[index].homework_record.homework_status = res.data.data.homework_status
-
-        //       item.uploadStatus = 2
-        //     } else if (res.data.code === 1060) {
-        //       item.uploadStatus = -5
-        //     } else {
-        //       item.uploadStatus = -1
-        //     }
-        //   })
-        //   .catch(error => {
-        //     console.log(error)
-        //     item.uploadStatus = -1
-        //   })
+        }
+        let index = this.tableData.indexOf(this.editform)
         filePost(id, param, config)
           .then(res => {
-            console.log(res);
+
             if (res.code === 1000) {
-              let index = this.tableData.indexOf(this.editform);
-              this.tableData[index].homework_record.file = res.data.file;
-              this.tableData[index].homework_record.homework_status =
-                res.data.homework_status;
-              item.uploadStatus = 2;
+              console.log(res)
+              this.tableData[index].homework_record.file = res.data.file
+              this.tableData[index].homework_record.homework_status = res.data.homework_status
+              item.uploadStatus = 2
             } else if (res.code === 1010) {
-              item.uploadStatus = -5;
+              item.uploadStatus = -5
             } else {
-              item.uploadStatus = -1;
+              item.uploadStatus = -1
             }
           })
           .catch(err => {
-            console.log(err);
-            item.uploadStatus = -1;
-          });
+            console.log(err)
+            item.uploadStatus = -1
+          })
       }
     },
-    formatFileSize: function(fileSize, idx) {
-      var units = ["B", "KB", "MB", "GB"];
-      idx = idx || 0;
+    formatFileSize: function (fileSize, idx) {
+      var units = ['B', 'KB', 'MB', 'GB']
+      idx = idx || 0
       if (fileSize < 1024 || idx === units.length - 1) {
-        return fileSize.toFixed(1) + units[idx];
+        return fileSize.toFixed(1) + units[idx]
       }
-      return this.formatFileSize(fileSize / 1024, ++idx);
+      return this.formatFileSize(fileSize / 1024, ++idx)
     },
-    checkFileType: function(fileType) {
-      const acceptTypes = ["txt"];
+    checkFileType: function (fileType) {
+      const acceptTypes = ['txt']
       for (var i = 0; i < acceptTypes.length; i++) {
         if (fileType === acceptTypes[i]) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
-    checkFileSize: function(fileSize) {
+    checkFileSize: function (fileSize) {
       // 2M
-      const MAX_SIZE = 2 * 1024 * 1024;
+      const MAX_SIZE = 2 * 1024 * 1024
       if (fileSize > MAX_SIZE) {
-        return false;
+        return false
       }
-      return true;
+      return true
     }
   },
   computed: {
-    file: function(row) {
-      return row.homework_record.file;
+    file: function (row) {
+      return row.homework_record.file
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

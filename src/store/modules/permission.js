@@ -1,7 +1,6 @@
 import { constantRouterMap } from '@/router/router'
 import Layout from '@/layout/index'
 
-
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -11,11 +10,10 @@ const permission = {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
-      
     },
-    RESET_ADDROUTERS:(state)=>{
+    RESET_ADDROUTERS: (state) => {
       state.addRouters = []
-    },
+    }
 
   },
   actions: {
@@ -24,7 +22,7 @@ const permission = {
     }
   }
 }
- 
+
 export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由字符串，转换为组件对象
   return routers.filter(router => {
     if (router.component) {

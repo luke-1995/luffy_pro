@@ -35,9 +35,6 @@
         </div>
       </div>
 
-
-
-
 </template>
 
 <script>
@@ -47,7 +44,7 @@ import { slGet } from '@/api/student_list'
 export default {
   data () {
     return {
-      tableData: [{id: 0, username: 'title'}],
+      tableData: [],
       onConfirm: 'delete',
       isadd: false,
       isedit: false,

@@ -11,6 +11,9 @@
 2. 安装依赖文件和包,命令行输入:npm install
 3. 安装好后,接着启动redis服务和django服务
 4. 启动前端的服务,命令:npm run dev
+# 项目地址
+* 前端:[https://github.com/luke-1995/luffy_pro](https://github.com/luke-1995/luffy_pro "前端地址")
+* 后端:[https://github.com/luke-1995/luffy_rest_pro](https://github.com/luke-1995/luffy_rest_pro "后端地址")
 # 登录用户信息
 * 需要用户登录用户名和密码进行验证
 * 超级用户(用户名:alex,密码:alex1234,角色:超级管理员)
